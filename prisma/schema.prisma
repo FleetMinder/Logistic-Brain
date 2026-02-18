@@ -1,0 +1,219 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ==================== ENUMS ====================
+
+enum VehicleType {
+  STANDARD
+  ADR
+  FRIGO
+  ECCEZIONALE
+}
+
+enum TripStatus {
+  PLANNED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum StopType {
+  PICKUP
+  DELIVERY
+  REST_STOP
+  CUSTOMS
+}
+
+enum DocumentType {
+  DDT
+  CMR
+  ADR_CERT
+  LICENSE
+  CQC
+  REVISION
+  INSURANCE
+  CUSTOMS
+  PERMIT
+}
+
+enum DocumentStatus {
+  VALID
+  EXPIRING_SOON
+  EXPIRED
+  MISSING
+}
+
+enum LogType {
+  DRIVING
+  REST
+  WORK
+  AVAILABILITY
+}
+
+enum AlertType {
+  DOCUMENT_EXPIRY
+  DRIVING_HOURS
+  VEHICLE_MAINTENANCE
+  COMPLIANCE
+}
+
+enum AlertSeverity {
+  INFO
+  WARNING
+  CRITICAL
+}
+
+// ==================== MODELS ====================
+
+model Vehicle {
+  id               String      @id @default(cuid())
+  plate            String      @unique
+  brand            String
+  model            String
+  type             VehicleType @default(STANDARD)
+  maxCapacityKg    Float?
+  maxCapacityM3    Float?
+  fuelType         String      @default("Diesel")
+  yearOfManufacture Int?
+  lastMaintenance  DateTime?
+  revisionDeadline DateTime?
+  insuranceDeadline DateTime?
+  isAvailable      Boolean     @default(true)
+  notes            String?
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+
+  trips     Trip[]
+  documents Document[]
+}
+
+model Driver {
+  id              String    @id @default(cuid())
+  name            String
+  surname         String
+  email           String?   @unique
+  phone           String?
+  licenseNumber   String    @unique
+  licenseDeadline DateTime
+  cqcDeadline     DateTime?
+  adrCertificate  Boolean   @default(false)
+  adrDeadline     DateTime?
+  weeklyHoursUsed Float     @default(0)
+  dailyHoursUsed  Float     @default(0)
+  isAvailable     Boolean   @default(true)
+  notes           String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  trips       Trip[]
+  documents   Document[]
+  driverLogs  DriverLog[]
+}
+
+model Trip {
+  id            String     @id @default(cuid())
+  status        TripStatus @default(PLANNED)
+  cargoType     String
+  cargoWeight   Float?
+  isInternational Boolean  @default(false)
+  isAdr         Boolean    @default(false)
+  startDate     DateTime
+  endDate       DateTime?
+  totalKm       Float?
+  estimatedCost Float?
+  actualCost    Float?
+  fuelCost      Float?
+  tollCost      Float?
+  notes         String?
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  vehicleId String?
+  driverId  String?
+  vehicle   Vehicle?   @relation(fields: [vehicleId], references: [id])
+  driver    Driver?    @relation(fields: [driverId], references: [id])
+
+  stops     Stop[]
+  documents Document[]
+  alerts    Alert[]
+  driverLogs DriverLog[]
+}
+
+model Stop {
+  id               String    @id @default(cuid())
+  tripId           String
+  sequenceOrder    Int
+  address          String
+  city             String?
+  country          String    @default("IT")
+  latitude         Float?
+  longitude        Float?
+  type             StopType  @default(DELIVERY)
+  estimatedArrival DateTime?
+  actualArrival    DateTime?
+  estimatedDeparture DateTime?
+  actualDeparture  DateTime?
+  notes            String?
+  createdAt        DateTime  @default(now())
+
+  trip Trip @relation(fields: [tripId], references: [id], onDelete: Cascade)
+}
+
+model Document {
+  id              String         @id @default(cuid())
+  type            DocumentType
+  status          DocumentStatus @default(VALID)
+  fileUrl         String?
+  fileName        String?
+  expirationDate  DateTime?
+  issueDate       DateTime?
+  notes           String?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  tripId    String?
+  vehicleId String?
+  driverId  String?
+  trip      Trip?    @relation(fields: [tripId], references: [id])
+  vehicle   Vehicle? @relation(fields: [vehicleId], references: [id])
+  driver    Driver?  @relation(fields: [driverId], references: [id])
+}
+
+model DriverLog {
+  id        String    @id @default(cuid())
+  driverId  String
+  tripId    String?
+  type      LogType
+  startTime DateTime
+  endTime   DateTime?
+  durationMinutes Int?
+  notes     String?
+  createdAt DateTime  @default(now())
+
+  driver Driver @relation(fields: [driverId], references: [id])
+  trip   Trip?  @relation(fields: [tripId], references: [id])
+}
+
+model Alert {
+  id          String        @id @default(cuid())
+  type        AlertType
+  severity    AlertSeverity @default(WARNING)
+  title       String
+  message     String
+  isRead      Boolean       @default(false)
+  isResolved  Boolean       @default(false)
+  tripId      String?
+  createdAt   DateTime      @default(now())
+
+  trip Trip? @relation(fields: [tripId], references: [id])
+}

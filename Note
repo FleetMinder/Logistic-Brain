@@ -1,0 +1,71 @@
+Realizza un documento di progetto funzionale e tecnico per lo sviluppo di una web app di pianificazione viaggi per un'azienda di logistica italiana, da consegnare al team di sviluppo. Il documento deve avere indicazioni delle funzionalità, come devono essere e dei dati. Il documento è in formato Markdown e in italiano.
+Stack tecnologico:
+
+NextJS (App Router) con TypeScript
+TailwindCSS + shadcn/ui
+Database in Neon DB (PostgreSQL serverless)
+ORM: Prisma o Drizzle
+Autenticazione: NextAuth.js o Clerk
+Mappe/Routing: API di terze parti (es. Google Maps, Mapbox, OpenRouteService)
+
+Contesto di business:
+Le imprese italiane di logistica sono soggette a normative stringenti (Reg. CE 561/2006 sui tempi di guida e riposo, normativa ADR per merci pericolose, Codice della Strada, normative doganali per trasporti internazionali). L'app deve gestire viaggi nazionali e internazionali, garantendo conformità normativa.
+Moduli funzionali richiesti:
+
+Pianificazione viaggi
+
+Creazione, modifica e assegnazione viaggi a veicoli e autisti
+Gestione tappe intermedie (ritiro, consegna, sosta obbligatoria)
+Calendario viaggi con vista giornaliera/settimanale/mensile
+
+
+Ottimizzazione rotte
+
+Calcolo rotta ottimale per tempo, distanza e costi (carburante, pedaggi)
+Ricalcolo dinamico in caso di imprevisti (traffico, chiusure stradali)
+Supporto multi-stop con ordinamento intelligente delle tappe
+
+
+Tipologia di trasporto
+
+Gestione di diverse tipologie: merce generica, ADR (merci pericolose), refrigerato, eccezionale
+Vincoli specifici per tipologia (restrizioni stradali, orari di transito, veicoli ammessi)
+
+
+Benessere dell'autista
+
+Monitoraggio tempi di guida e riposo secondo Reg. CE 561/2006
+Alert automatici per pause obbligatorie e riposo giornaliero/settimanale
+Suggerimento aree di sosta e punti ristoro lungo il percorso
+Storico affaticamento e report benessere
+
+
+Documentazione e compliance
+
+Checklist documentale per ogni viaggio (DDT, CMR, certificati ADR, documenti doganali)
+Generazione e archiviazione documenti
+Alert per documenti mancanti o in scadenza (patenti, revisioni, certificazioni)
+
+
+Dashboard e reportistica
+
+KPI operativi: viaggi completati, km percorsi, costi, ritardi, infrazioni tempi di guida
+Report per autista, veicolo e periodo
+
+
+
+Requisiti del documento tecnico:
+Per ogni modulo il documento deve includere:
+
+Descrizione funzionale dettagliata con user stories o scenari d'uso
+Flussi operativi (descritti testualmente o con diagrammi Mermaid)
+Modello dati: tabelle del database con campi, tipi, relazioni e vincoli
+API endpoints principali (metodo, path, payload, response)
+Regole di business e vincoli normativi applicabili
+
+Formato output:
+
+Documento Markdown (.md) in italiano
+Struttura con indice navigabile
+Diagrammi ER e flussi in formato Mermaid dove utile
+Documento completo e dettagliato, non un semplice elenco
