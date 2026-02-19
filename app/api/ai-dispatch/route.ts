@@ -139,7 +139,7 @@ Rispondi con:
 5. **📈 Score di ottimizzazione stimato** — percentuale da 0 a 100% rispetto al massimo teorico`
 
         const geminiResponse = await fetch(
-            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${apiKey}`,
+            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
             {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
