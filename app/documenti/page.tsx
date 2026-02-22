@@ -9,13 +9,11 @@ import {
     Clock,
     Upload,
     Search,
-    Filter,
 } from "lucide-react"
 import { demoDocuments, demoDrivers, demoVehicles, demoTrips } from "@/lib/demo-data"
 import {
     formatDate,
     getDocumentTypeLabel,
-    getDocumentStatusColor,
     cn,
 } from "@/lib/utils"
 
@@ -28,7 +26,7 @@ export default function DocumentiPage() {
     const filtered = demoDocuments.filter(doc => {
         const matchSearch = getDocumentTypeLabel(doc.type).toLowerCase().includes(search.toLowerCase())
         if (activeTab === "Tutti") return matchSearch
-        if (activeTab === "Scaduti/In Scadenza") return matchSearch && (doc.status === "EXPIRED" || doc.status === "EXPIRING_SOON")
+        if (activeTab === "Scaduti/In Scadenza") return matchSearch && ((doc.status as string) === "EXPIRED" || doc.status === "EXPIRING_SOON")
         if (activeTab === "Autisti") return matchSearch && doc.driverId !== null
         if (activeTab === "Veicoli") return matchSearch && doc.vehicleId !== null
         if (activeTab === "Viaggi") return matchSearch && doc.tripId !== null
@@ -55,7 +53,7 @@ export default function DocumentiPage() {
         VALID: <CheckCircle2 className="w-4 h-4 text-emerald-400" />,
         EXPIRING_SOON: <Clock className="w-4 h-4 text-amber-400" />,
         EXPIRED: <AlertTriangle className="w-4 h-4 text-red-400" />,
-        MISSING: <AlertTriangle className="w-4 h-4 text-gray-400" />,
+        MISSING: <AlertTriangle className="w-4 h-4 text-zinc-400" />,
     }
 
     const statusLabel = {
@@ -66,7 +64,7 @@ export default function DocumentiPage() {
     }
 
     const expiringSoon = demoDocuments.filter(d => d.status === "EXPIRING_SOON").length
-    const expired = demoDocuments.filter(d => d.status === "EXPIRED").length
+    const expired = demoDocuments.filter(d => (d.status as string) === "EXPIRED").length
 
     return (
         <MainLayout title="Documenti & Compliance">
@@ -77,7 +75,7 @@ export default function DocumentiPage() {
                         <h2 className="text-xl font-bold text-foreground">Documenti</h2>
                         <p className="text-sm text-muted-foreground">{demoDocuments.length} documenti totali</p>
                     </div>
-                    <button className="flex items-center gap-2 px-4 py-2 rounded-lg gradient-primary text-white text-sm font-semibold hover:opacity-90 transition-opacity shadow-lg shadow-blue-500/25">
+                    <button className="flex items-center gap-2 px-4 py-2 rounded-lg gradient-primary text-white text-sm font-semibold hover:opacity-90 transition-opacity">
                         <Upload className="w-4 h-4" />
                         Carica Documento
                     </button>
@@ -87,20 +85,20 @@ export default function DocumentiPage() {
                 {(expired > 0 || expiringSoon > 0) && (
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         {expired > 0 && (
-                            <div className="flex items-center gap-3 p-4 rounded-xl bg-red-500/10 border border-red-500/20">
+                            <div className="flex items-center gap-3 p-4 rounded-xl bg-red-500/8 border border-red-500/15">
                                 <AlertTriangle className="w-5 h-5 text-red-400 flex-shrink-0" />
                                 <div>
                                     <p className="text-sm font-semibold text-red-400">{expired} Documenti Scaduti</p>
-                                    <p className="text-xs text-red-400/70">Richiedono rinnovo immediato</p>
+                                    <p className="text-xs text-red-400/60">Richiedono rinnovo immediato</p>
                                 </div>
                             </div>
                         )}
                         {expiringSoon > 0 && (
-                            <div className="flex items-center gap-3 p-4 rounded-xl bg-amber-500/10 border border-amber-500/20">
+                            <div className="flex items-center gap-3 p-4 rounded-xl bg-amber-500/8 border border-amber-500/15">
                                 <Clock className="w-5 h-5 text-amber-400 flex-shrink-0" />
                                 <div>
                                     <p className="text-sm font-semibold text-amber-400">{expiringSoon} In Scadenza (30gg)</p>
-                                    <p className="text-xs text-amber-400/70">Pianifica il rinnovo</p>
+                                    <p className="text-xs text-amber-400/60">Pianifica il rinnovo</p>
                                 </div>
                             </div>
                         )}
@@ -115,7 +113,7 @@ export default function DocumentiPage() {
                         placeholder="Cerca per tipo documento..."
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
-                        className="w-full pl-9 pr-4 py-2.5 text-sm bg-secondary border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                        className="w-full pl-9 pr-4 py-2.5 text-sm bg-secondary border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40"
                     />
                 </div>
 
@@ -128,7 +126,7 @@ export default function DocumentiPage() {
                             className={cn(
                                 "px-3 py-1.5 rounded-lg text-xs font-medium transition-all",
                                 activeTab === tab
-                                    ? "bg-primary/20 text-primary border border-primary/30"
+                                    ? "bg-primary/15 text-primary border border-primary/25"
                                     : "text-muted-foreground hover:text-foreground"
                             )}
                         >
@@ -143,7 +141,7 @@ export default function DocumentiPage() {
                         <thead>
                             <tr className="border-b border-border/50">
                                 <th className="text-left text-xs font-medium text-muted-foreground px-5 py-3 uppercase tracking-wider">Documento</th>
-                                <th className="text-left text-xs font-medium text-muted-foreground px-3 py-3 uppercase tracking-wider hidden md:table-cell">Entità</th>
+                                <th className="text-left text-xs font-medium text-muted-foreground px-3 py-3 uppercase tracking-wider hidden md:table-cell">Entita</th>
                                 <th className="text-left text-xs font-medium text-muted-foreground px-3 py-3 uppercase tracking-wider">Stato</th>
                                 <th className="text-left text-xs font-medium text-muted-foreground px-3 py-3 uppercase tracking-wider hidden lg:table-cell">Scadenza</th>
                                 <th className="text-right text-xs font-medium text-muted-foreground px-5 py-3 uppercase tracking-wider">Azioni</th>
@@ -173,7 +171,7 @@ export default function DocumentiPage() {
                                                 "text-xs font-medium",
                                                 doc.status === "VALID" ? "text-emerald-400" :
                                                     doc.status === "EXPIRING_SOON" ? "text-amber-400" :
-                                                        doc.status === "EXPIRED" ? "text-red-400" : "text-gray-400"
+                                                        (doc.status as string) === "EXPIRED" ? "text-red-400" : "text-zinc-400"
                                             )}>
                                                 {statusLabel[doc.status as keyof typeof statusLabel]}
                                             </span>

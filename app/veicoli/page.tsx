@@ -16,6 +16,8 @@ import {
     formatDate,
     getVehicleTypeColor,
     getVehicleTypeLabel,
+    getTachographTypeLabel,
+    getTachographTypeColor,
     isExpiringSoon,
     isExpired,
     cn,
@@ -45,7 +47,7 @@ export default function VeicoliPage() {
                     </div>
                     <button
                         onClick={() => setShowModal(true)}
-                        className="flex items-center gap-2 px-4 py-2 rounded-lg gradient-primary text-white text-sm font-semibold hover:opacity-90 transition-opacity shadow-lg shadow-blue-500/25"
+                        className="flex items-center gap-2 px-4 py-2 rounded-lg gradient-primary text-white text-sm font-semibold hover:opacity-90 transition-opacity"
                     >
                         <Plus className="w-4 h-4" />
                         Nuovo Veicolo
@@ -61,7 +63,7 @@ export default function VeicoliPage() {
                             placeholder="Cerca per targa, marca, modello..."
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            className="w-full pl-9 pr-4 py-2.5 text-sm bg-secondary border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                            className="w-full pl-9 pr-4 py-2.5 text-sm bg-secondary border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40"
                         />
                     </div>
                     <div className="flex gap-2">
@@ -72,7 +74,7 @@ export default function VeicoliPage() {
                                 className={cn(
                                     "px-3 py-2 rounded-lg text-xs font-medium border transition-all",
                                     typeFilter === t
-                                        ? "bg-primary/20 text-primary border-primary/30"
+                                        ? "bg-primary/15 text-primary border-primary/25"
                                         : "bg-secondary text-muted-foreground border-border hover:text-foreground"
                                 )}
                             >
@@ -122,7 +124,7 @@ export default function VeicoliPage() {
                                     {vehicle.maxCapacityM3 && (
                                         <div>
                                             <p className="text-xs text-muted-foreground">Volume</p>
-                                            <p className="text-sm font-medium text-foreground">{vehicle.maxCapacityM3} m³</p>
+                                            <p className="text-sm font-medium text-foreground">{vehicle.maxCapacityM3} m3</p>
                                         </div>
                                     )}
                                     <div>
@@ -135,16 +137,19 @@ export default function VeicoliPage() {
                                     </div>
                                 </div>
 
-                                {/* Status */}
+                                {/* Status + Tachograph */}
                                 <div className="flex items-center justify-between mb-4">
                                     <span className={cn(
                                         "flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium border",
                                         vehicle.isAvailable
-                                            ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/30"
-                                            : "bg-amber-500/20 text-amber-400 border-amber-500/30"
+                                            ? "bg-emerald-500/15 text-emerald-400 border-emerald-500/25"
+                                            : "bg-amber-500/15 text-amber-400 border-amber-500/25"
                                     )}>
                                         <div className={cn("w-1.5 h-1.5 rounded-full", vehicle.isAvailable ? "bg-emerald-400" : "bg-amber-400")} />
                                         {vehicle.isAvailable ? "Disponibile" : "In Servizio"}
+                                    </span>
+                                    <span className={cn("px-2 py-0.5 rounded text-[10px] font-medium border", getTachographTypeColor(vehicle.tachographType))}>
+                                        Tach. {getTachographTypeLabel(vehicle.tachographType)}
                                     </span>
                                 </div>
 
@@ -156,11 +161,11 @@ export default function VeicoliPage() {
                                             Revisione
                                         </span>
                                         <span className={cn(
-                                            "text-xs font-medium",
+                                            "text-xs font-medium flex items-center gap-1",
                                             revisionExpired ? "text-red-400" : revisionExpiring ? "text-amber-400" : "text-emerald-400"
                                         )}>
-                                            {revisionExpired ? "⚠ Scaduta" : revisionExpiring ? "⚠ " : "✓ "}
-                                            {formatDate(vehicle.revisionDeadline)}
+                                            {revisionExpired ? <AlertTriangle className="w-3 h-3" /> : revisionExpiring ? <AlertTriangle className="w-3 h-3" /> : <CheckCircle2 className="w-3 h-3" />}
+                                            {revisionExpired ? "Scaduta" : ""} {formatDate(vehicle.revisionDeadline)}
                                         </span>
                                     </div>
                                     <div className="flex items-center justify-between">
@@ -169,10 +174,10 @@ export default function VeicoliPage() {
                                             Assicurazione
                                         </span>
                                         <span className={cn(
-                                            "text-xs font-medium",
+                                            "text-xs font-medium flex items-center gap-1",
                                             insuranceExpiring ? "text-amber-400" : "text-emerald-400"
                                         )}>
-                                            {insuranceExpiring ? "⚠ " : "✓ "}
+                                            {insuranceExpiring ? <AlertTriangle className="w-3 h-3" /> : <CheckCircle2 className="w-3 h-3" />}
                                             {formatDate(vehicle.insuranceDeadline)}
                                         </span>
                                     </div>
@@ -200,17 +205,17 @@ export default function VeicoliPage() {
                     <div className="bg-card border border-border rounded-2xl w-full max-w-lg shadow-2xl animate-fade-in">
                         <div className="flex items-center justify-between p-6 border-b border-border">
                             <h2 className="text-lg font-semibold text-foreground">Nuovo Veicolo</h2>
-                            <button onClick={() => setShowModal(false)} className="text-muted-foreground hover:text-foreground">✕</button>
+                            <button onClick={() => setShowModal(false)} className="text-muted-foreground hover:text-foreground text-lg leading-none">&times;</button>
                         </div>
                         <div className="p-6 space-y-4">
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
                                     <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Targa</label>
-                                    <input type="text" placeholder="AB 123 CD" className="mt-1.5 w-full px-3 py-2.5 text-sm bg-secondary border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50" />
+                                    <input type="text" placeholder="AB 123 CD" className="mt-1.5 w-full px-3 py-2.5 text-sm bg-secondary border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40" />
                                 </div>
                                 <div>
                                     <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Tipo</label>
-                                    <select className="mt-1.5 w-full px-3 py-2.5 text-sm bg-secondary border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50">
+                                    <select className="mt-1.5 w-full px-3 py-2.5 text-sm bg-secondary border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40">
                                         <option value="STANDARD">Standard</option>
                                         <option value="ADR">ADR</option>
                                         <option value="FRIGO">Refrigerato</option>
@@ -221,21 +226,21 @@ export default function VeicoliPage() {
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
                                     <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Marca</label>
-                                    <input type="text" placeholder="Iveco" className="mt-1.5 w-full px-3 py-2.5 text-sm bg-secondary border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50" />
+                                    <input type="text" placeholder="Iveco" className="mt-1.5 w-full px-3 py-2.5 text-sm bg-secondary border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40" />
                                 </div>
                                 <div>
                                     <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Modello</label>
-                                    <input type="text" placeholder="Daily 35S18" className="mt-1.5 w-full px-3 py-2.5 text-sm bg-secondary border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50" />
+                                    <input type="text" placeholder="Daily 35S18" className="mt-1.5 w-full px-3 py-2.5 text-sm bg-secondary border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40" />
                                 </div>
                             </div>
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
                                     <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Scadenza Revisione</label>
-                                    <input type="date" className="mt-1.5 w-full px-3 py-2.5 text-sm bg-secondary border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50" />
+                                    <input type="date" className="mt-1.5 w-full px-3 py-2.5 text-sm bg-secondary border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40" />
                                 </div>
                                 <div>
                                     <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Portata (kg)</label>
-                                    <input type="number" placeholder="24000" className="mt-1.5 w-full px-3 py-2.5 text-sm bg-secondary border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50" />
+                                    <input type="number" placeholder="24000" className="mt-1.5 w-full px-3 py-2.5 text-sm bg-secondary border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40" />
                                 </div>
                             </div>
                         </div>

@@ -1,7 +1,6 @@
 import { MainLayout } from "@/components/layout/main-layout"
 import { demoTrips } from "@/lib/demo-data"
 import {
-    formatDate,
     formatDateTime,
     formatKm,
     formatCurrency,
@@ -29,16 +28,16 @@ import {
 } from "lucide-react"
 import Link from "next/link"
 
+const stopTypeColor: Record<string, string> = {
+    PICKUP: "bg-emerald-400",
+    DELIVERY: "bg-red-400",
+    REST_STOP: "bg-amber-400",
+    CUSTOMS: "bg-sky-400",
+}
+
 export default async function TripDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params
     const trip = demoTrips.find(t => t.id === id) || demoTrips[0]
-
-    const stopTypeIcon = {
-        PICKUP: "🟢",
-        DELIVERY: "🔴",
-        REST_STOP: "🟡",
-        CUSTOMS: "🔵",
-    }
 
     return (
         <MainLayout title="Dettaglio Viaggio">
@@ -56,13 +55,13 @@ export default async function TripDetailPage({ params }: { params: Promise<{ id:
                                     {getTripStatusLabel(trip.status)}
                                 </span>
                                 {trip.isAdr && (
-                                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-orange-500/20 text-orange-400 border border-orange-500/30">
+                                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-orange-500/15 text-orange-400 border border-orange-500/25">
                                         <AlertTriangle className="w-3 h-3" />
                                         ADR
                                     </span>
                                 )}
                                 {trip.isInternational && (
-                                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-purple-500/20 text-purple-400 border border-purple-500/30">
+                                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-indigo-500/15 text-indigo-400 border border-indigo-500/25">
                                         <Globe className="w-3 h-3" />
                                         Internazionale
                                     </span>
@@ -143,9 +142,10 @@ export default async function TripDetailPage({ params }: { params: Promise<{ id:
                                 {trip.stops.map((stop, index) => (
                                     <div key={stop.id} className="flex gap-4">
                                         <div className="flex flex-col items-center">
-                                            <div className="w-8 h-8 rounded-full bg-secondary border-2 border-border flex items-center justify-center text-sm">
-                                                {stopTypeIcon[stop.type as keyof typeof stopTypeIcon] || "⚪"}
-                                            </div>
+                                            <div className={cn(
+                                                "w-3 h-3 rounded-full border-2 border-background",
+                                                stopTypeColor[stop.type] || "bg-zinc-400"
+                                            )} />
                                             {index < trip.stops.length - 1 && (
                                                 <div className="w-0.5 h-12 bg-border/50 my-1" />
                                             )}

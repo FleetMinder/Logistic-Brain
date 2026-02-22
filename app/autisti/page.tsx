@@ -18,6 +18,7 @@ import {
     formatDate,
     formatHours,
     getDrivingHoursStatus,
+    getTachographDownloadStatus,
     isExpiringSoon,
     isExpired,
     cn,
@@ -42,7 +43,7 @@ export default function AutoristiPage() {
                     </div>
                     <button
                         onClick={() => setShowModal(true)}
-                        className="flex items-center gap-2 px-4 py-2 rounded-lg gradient-primary text-white text-sm font-semibold hover:opacity-90 transition-opacity shadow-lg shadow-blue-500/25"
+                        className="flex items-center gap-2 px-4 py-2 rounded-lg gradient-primary text-white text-sm font-semibold hover:opacity-90 transition-opacity"
                     >
                         <Plus className="w-4 h-4" />
                         Nuovo Autista
@@ -57,7 +58,7 @@ export default function AutoristiPage() {
                         placeholder="Cerca per nome, cognome, numero patente..."
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
-                        className="w-full pl-9 pr-4 py-2.5 text-sm bg-secondary border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                        className="w-full pl-9 pr-4 py-2.5 text-sm bg-secondary border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40"
                     />
                 </div>
 
@@ -90,8 +91,8 @@ export default function AutoristiPage() {
                                         <div className={cn(
                                             "flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium border",
                                             driver.isAvailable
-                                                ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/30"
-                                                : "bg-amber-500/20 text-amber-400 border-amber-500/30"
+                                                ? "bg-emerald-500/15 text-emerald-400 border-emerald-500/25"
+                                                : "bg-amber-500/15 text-amber-400 border-amber-500/25"
                                         )}>
                                             <div className={cn("w-1.5 h-1.5 rounded-full", driver.isAvailable ? "bg-emerald-400" : "bg-amber-400")} />
                                             {driver.isAvailable ? "Disponibile" : "In Servizio"}
@@ -140,10 +141,24 @@ export default function AutoristiPage() {
                                             style={{ width: `${Math.min((driver.dailyHoursUsed / 9) * 100, 100)}%` }}
                                         />
                                     </div>
-                                    <div className="flex items-center justify-between text-xs mt-1">
-                                        <span className="text-muted-foreground">Settimanale</span>
-                                        <span className="text-muted-foreground">{formatHours(driver.weeklyHoursUsed)} / 56h</span>
+                                    <div className="flex items-center justify-between text-xs mt-1.5">
+                                        <span className="text-muted-foreground">Settimana</span>
+                                        <span className={cn("font-medium", getDrivingHoursStatus(driver.weeklyHoursUsed, 56) === "critical" ? "text-red-400" : getDrivingHoursStatus(driver.weeklyHoursUsed, 56) === "warning" ? "text-amber-400" : "text-muted-foreground")}>{formatHours(driver.weeklyHoursUsed)} / 56h</span>
                                     </div>
+                                    <div className="flex items-center justify-between text-xs mt-0.5">
+                                        <span className="text-muted-foreground">Bisettimanale</span>
+                                        <span className={cn("font-medium", getDrivingHoursStatus(driver.biweeklyHoursUsed, 90) === "critical" ? "text-red-400" : getDrivingHoursStatus(driver.biweeklyHoursUsed, 90) === "warning" ? "text-amber-400" : "text-muted-foreground")}>{formatHours(driver.biweeklyHoursUsed)} / 90h</span>
+                                    </div>
+                                    {(() => {
+                                        const tachStatus = getTachographDownloadStatus(driver.lastTachographDownload)
+                                        if (tachStatus === "ok") return null
+                                        return (
+                                            <div className={cn("flex items-center gap-1 text-[11px] mt-2", tachStatus === "overdue" ? "text-red-400" : "text-amber-400")}>
+                                                <AlertTriangle className="w-3 h-3" />
+                                                Scarico tachigrafo {tachStatus === "overdue" ? "SCADUTO" : "in scadenza"} (ultimo: {formatDate(driver.lastTachographDownload)})
+                                            </div>
+                                        )
+                                    })()}
                                 </div>
 
                                 {/* Certifications */}
@@ -154,11 +169,11 @@ export default function AutoristiPage() {
                                             Patente
                                         </span>
                                         <span className={cn(
-                                            "text-xs font-medium",
+                                            "text-xs font-medium flex items-center gap-1",
                                             licenseExpired ? "text-red-400" : licenseExpiring ? "text-amber-400" : "text-emerald-400"
                                         )}>
-                                            {licenseExpired ? "⚠ Scaduta" : licenseExpiring ? "⚠ " : "✓ "}
-                                            {formatDate(driver.licenseDeadline)}
+                                            {licenseExpired ? <AlertTriangle className="w-3 h-3" /> : licenseExpiring ? <AlertTriangle className="w-3 h-3" /> : <CheckCircle2 className="w-3 h-3" />}
+                                            {licenseExpired ? "Scaduta" : ""} {formatDate(driver.licenseDeadline)}
                                         </span>
                                     </div>
                                     {driver.cqcDeadline && (
@@ -168,11 +183,11 @@ export default function AutoristiPage() {
                                                 CQC
                                             </span>
                                             <span className={cn(
-                                                "text-xs font-medium",
+                                                "text-xs font-medium flex items-center gap-1",
                                                 cqcExpired ? "text-red-400" : cqcExpiring ? "text-amber-400" : "text-emerald-400"
                                             )}>
-                                                {cqcExpired ? "⚠ Scaduta" : cqcExpiring ? "⚠ " : "✓ "}
-                                                {formatDate(driver.cqcDeadline)}
+                                                {cqcExpired ? <AlertTriangle className="w-3 h-3" /> : cqcExpiring ? <AlertTriangle className="w-3 h-3" /> : <CheckCircle2 className="w-3 h-3" />}
+                                                {cqcExpired ? "Scaduta" : ""} {formatDate(driver.cqcDeadline)}
                                             </span>
                                         </div>
                                     )}
@@ -183,10 +198,10 @@ export default function AutoristiPage() {
                                                 ADR
                                             </span>
                                             <span className={cn(
-                                                "text-xs font-medium",
+                                                "text-xs font-medium flex items-center gap-1",
                                                 adrExpiring ? "text-amber-400" : "text-emerald-400"
                                             )}>
-                                                {adrExpiring ? "⚠ " : "✓ "}
+                                                {adrExpiring ? <AlertTriangle className="w-3 h-3" /> : <CheckCircle2 className="w-3 h-3" />}
                                                 {formatDate(driver.adrDeadline)}
                                             </span>
                                         </div>
@@ -208,36 +223,36 @@ export default function AutoristiPage() {
                     <div className="bg-card border border-border rounded-2xl w-full max-w-lg shadow-2xl animate-fade-in">
                         <div className="flex items-center justify-between p-6 border-b border-border">
                             <h2 className="text-lg font-semibold text-foreground">Nuovo Autista</h2>
-                            <button onClick={() => setShowModal(false)} className="text-muted-foreground hover:text-foreground">✕</button>
+                            <button onClick={() => setShowModal(false)} className="text-muted-foreground hover:text-foreground text-lg leading-none">&times;</button>
                         </div>
                         <div className="p-6 space-y-4">
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
                                     <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Nome</label>
-                                    <input type="text" placeholder="Mario" className="mt-1.5 w-full px-3 py-2.5 text-sm bg-secondary border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50" />
+                                    <input type="text" placeholder="Mario" className="mt-1.5 w-full px-3 py-2.5 text-sm bg-secondary border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40" />
                                 </div>
                                 <div>
                                     <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Cognome</label>
-                                    <input type="text" placeholder="Rossi" className="mt-1.5 w-full px-3 py-2.5 text-sm bg-secondary border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50" />
+                                    <input type="text" placeholder="Rossi" className="mt-1.5 w-full px-3 py-2.5 text-sm bg-secondary border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40" />
                                 </div>
                             </div>
                             <div>
                                 <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Numero Patente</label>
-                                <input type="text" placeholder="IT123456789" className="mt-1.5 w-full px-3 py-2.5 text-sm bg-secondary border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50" />
+                                <input type="text" placeholder="IT123456789" className="mt-1.5 w-full px-3 py-2.5 text-sm bg-secondary border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40" />
                             </div>
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
                                     <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Scadenza Patente</label>
-                                    <input type="date" className="mt-1.5 w-full px-3 py-2.5 text-sm bg-secondary border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50" />
+                                    <input type="date" className="mt-1.5 w-full px-3 py-2.5 text-sm bg-secondary border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40" />
                                 </div>
                                 <div>
                                     <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Scadenza CQC</label>
-                                    <input type="date" className="mt-1.5 w-full px-3 py-2.5 text-sm bg-secondary border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50" />
+                                    <input type="date" className="mt-1.5 w-full px-3 py-2.5 text-sm bg-secondary border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40" />
                                 </div>
                             </div>
                             <div>
                                 <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Email</label>
-                                <input type="email" placeholder="mario.rossi@azienda.it" className="mt-1.5 w-full px-3 py-2.5 text-sm bg-secondary border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50" />
+                                <input type="email" placeholder="mario.rossi@azienda.it" className="mt-1.5 w-full px-3 py-2.5 text-sm bg-secondary border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40" />
                             </div>
                             <label className="flex items-center gap-2 text-sm text-foreground cursor-pointer">
                                 <input type="checkbox" className="rounded border-border" />

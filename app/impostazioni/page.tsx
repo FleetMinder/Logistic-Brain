@@ -20,8 +20,8 @@ export default function ImpostazioniPage() {
                 {/* Company */}
                 <div className="glass rounded-xl p-6">
                     <div className="flex items-center gap-3 mb-5">
-                        <div className="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center">
-                            <Building2 className="w-4 h-4 text-blue-400" />
+                        <div className="w-8 h-8 rounded-lg bg-teal-500/15 flex items-center justify-center">
+                            <Building2 className="w-4 h-4 text-teal-400" />
                         </div>
                         <h3 className="text-sm font-semibold text-foreground">Dati Azienda</h3>
                     </div>
@@ -39,7 +39,7 @@ export default function ImpostazioniPage() {
                                 <input
                                     type={field.type}
                                     defaultValue={field.value}
-                                    className="mt-1.5 w-full px-3 py-2.5 text-sm bg-secondary border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                                    className="mt-1.5 w-full px-3 py-2.5 text-sm bg-secondary border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40"
                                 />
                             </div>
                         ))}
@@ -53,7 +53,7 @@ export default function ImpostazioniPage() {
                 {/* Database */}
                 <div className="glass rounded-xl p-6">
                     <div className="flex items-center gap-3 mb-5">
-                        <div className="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center">
+                        <div className="w-8 h-8 rounded-lg bg-emerald-500/15 flex items-center justify-center">
                             <Database className="w-4 h-4 text-emerald-400" />
                         </div>
                         <div>
@@ -67,13 +67,13 @@ export default function ImpostazioniPage() {
                             <input
                                 type="password"
                                 placeholder="postgresql://user:pass@ep-xxx.neon.tech/neondb"
-                                className="mt-1.5 w-full px-3 py-2.5 text-sm bg-secondary border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 font-mono"
+                                className="mt-1.5 w-full px-3 py-2.5 text-sm bg-secondary border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 font-mono"
                             />
                             <p className="text-xs text-muted-foreground mt-1">Configura in <code className="bg-secondary px-1 rounded">.env.local</code> per sicurezza</p>
                         </div>
-                        <div className="flex items-center gap-3 p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-lg">
+                        <div className="flex items-center gap-3 p-3 bg-emerald-500/8 border border-emerald-500/15 rounded-lg">
                             <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                            <p className="text-xs text-emerald-400">Modalità Demo — Dati locali attivi</p>
+                            <p className="text-xs text-emerald-400">Modalita Demo — Dati locali attivi</p>
                         </div>
                     </div>
                 </div>
@@ -81,8 +81,8 @@ export default function ImpostazioniPage() {
                 {/* API Keys */}
                 <div className="glass rounded-xl p-6">
                     <div className="flex items-center gap-3 mb-5">
-                        <div className="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center">
-                            <Key className="w-4 h-4 text-purple-400" />
+                        <div className="w-8 h-8 rounded-lg bg-indigo-500/15 flex items-center justify-center">
+                            <Key className="w-4 h-4 text-indigo-400" />
                         </div>
                         <h3 className="text-sm font-semibold text-foreground">API Keys</h3>
                     </div>
@@ -98,7 +98,7 @@ export default function ImpostazioniPage() {
                                 <input
                                     type="password"
                                     placeholder={api.placeholder}
-                                    className="w-full px-3 py-2.5 text-sm bg-secondary border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 font-mono"
+                                    className="w-full px-3 py-2.5 text-sm bg-secondary border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 font-mono"
                                 />
                             </div>
                         ))}
@@ -108,7 +108,7 @@ export default function ImpostazioniPage() {
                 {/* Notifications */}
                 <div className="glass rounded-xl p-6">
                     <div className="flex items-center gap-3 mb-5">
-                        <div className="w-8 h-8 rounded-lg bg-amber-500/20 flex items-center justify-center">
+                        <div className="w-8 h-8 rounded-lg bg-amber-500/15 flex items-center justify-center">
                             <Bell className="w-4 h-4 text-amber-400" />
                         </div>
                         <h3 className="text-sm font-semibold text-foreground">Notifiche</h3>
@@ -134,18 +134,18 @@ export default function ImpostazioniPage() {
                 {/* GDPR */}
                 <div className="glass rounded-xl p-6">
                     <div className="flex items-center gap-3 mb-5">
-                        <div className="w-8 h-8 rounded-lg bg-red-500/20 flex items-center justify-center">
+                        <div className="w-8 h-8 rounded-lg bg-red-500/15 flex items-center justify-center">
                             <Shield className="w-4 h-4 text-red-400" />
                         </div>
                         <h3 className="text-sm font-semibold text-foreground">Privacy & GDPR</h3>
                     </div>
                     <div className="space-y-3 text-sm text-muted-foreground">
-                        <p>I dati degli autisti sono trattati in conformità al <strong className="text-foreground">Regolamento UE 2016/679 (GDPR)</strong>.</p>
+                        <p>I dati degli autisti sono trattati in conformita al <strong className="text-foreground">Regolamento UE 2016/679 (GDPR)</strong>.</p>
                         <div className="flex gap-3">
                             <button className="px-4 py-2 rounded-lg bg-secondary border border-border text-sm font-medium text-foreground hover:bg-accent transition-colors">
                                 Esporta Dati
                             </button>
-                            <button className="px-4 py-2 rounded-lg bg-red-500/20 border border-red-500/30 text-sm font-medium text-red-400 hover:bg-red-500/30 transition-colors">
+                            <button className="px-4 py-2 rounded-lg bg-red-500/15 border border-red-500/25 text-sm font-medium text-red-400 hover:bg-red-500/25 transition-colors">
                                 Elimina Dati
                             </button>
                         </div>

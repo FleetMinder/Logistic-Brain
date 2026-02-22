@@ -27,7 +27,7 @@ export function Header({ title }: { title?: string }) {
                     <input
                         type="text"
                         placeholder="Cerca viaggi, autisti..."
-                        className="pl-9 pr-4 py-2 text-sm bg-secondary border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 w-64 transition-all"
+                        className="pl-9 pr-4 py-2 text-sm bg-secondary border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 w-64 transition-all"
                     />
                 </div>
 
@@ -52,7 +52,7 @@ export function Header({ title }: { title?: string }) {
                                 <p className="text-xs text-muted-foreground">{unreadAlerts.length} non lette</p>
                             </div>
                             <div className="max-h-80 overflow-y-auto scrollbar-thin">
-                                {demoAlerts.slice(0, 5).map((alert) => (
+                                {demoAlerts.filter(a => !a.isResolved).slice(0, 6).map((alert) => (
                                     <div
                                         key={alert.id}
                                         className={cn(
@@ -64,7 +64,7 @@ export function Header({ title }: { title?: string }) {
                                             <div className={cn(
                                                 "w-2 h-2 rounded-full mt-1.5 flex-shrink-0",
                                                 alert.severity === "CRITICAL" ? "bg-red-400" :
-                                                    alert.severity === "WARNING" ? "bg-amber-400" : "bg-blue-400"
+                                                    alert.severity === "WARNING" ? "bg-amber-400" : "bg-sky-400"
                                             )} />
                                             <div>
                                                 <p className="text-xs font-semibold text-foreground">{alert.title}</p>
@@ -75,7 +75,7 @@ export function Header({ title }: { title?: string }) {
                                 ))}
                             </div>
                             <div className="p-3 text-center">
-                                <a href="/documenti" className="text-xs text-primary hover:underline">Vedi tutti gli alert →</a>
+                                <a href="/compliance" className="text-xs text-primary hover:underline">Vedi tutti gli alert</a>
                             </div>
                         </div>
                     )}

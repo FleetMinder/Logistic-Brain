@@ -5,9 +5,9 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-    title: "Logistic Brain — Gestione Flotta & Viaggi",
-    description: "Piattaforma avanzata per la pianificazione e gestione dei viaggi logistici. Ottimizzazione rotte, monitoraggio autisti, compliance normativa CE 561/2006.",
-    keywords: ["logistica", "gestione flotta", "pianificazione viaggi", "autisti", "veicoli", "ADR"],
+    title: "Logistic Brain - Compliance & Operations Hub",
+    description: "Compliance hub per PMI dell'autotrasporto italiano. Monitoraggio scadenze, CE 561/2006, ADR, tachigrafo digitale, eCMR. AI Dispatch con verifica normativa integrata.",
+    keywords: ["logistica", "compliance", "autotrasporto", "CE 561/2006", "ADR", "tachigrafo", "eCMR", "PMI"],
 };
 
 export default function RootLayout({

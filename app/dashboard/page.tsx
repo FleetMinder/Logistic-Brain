@@ -11,18 +11,19 @@ import {
     ArrowUpRight,
     Fuel,
     Euro,
+    Shield,
+    ChevronRight,
 } from "lucide-react"
 import { demoStats, demoTrips, demoDrivers, demoAlerts } from "@/lib/demo-data"
 import {
-    formatDate,
     formatKm,
     formatCurrency,
     getTripStatusColor,
     getTripStatusLabel,
-    getVehicleTypeColor,
-    getVehicleTypeLabel,
     formatHours,
     getDrivingHoursStatus,
+    getComplianceColor,
+    getComplianceLabel,
     cn,
 } from "@/lib/utils"
 import Link from "next/link"
@@ -33,32 +34,38 @@ function KpiCard({
     subtitle,
     icon: Icon,
     trend,
-    color = "blue",
+    color = "teal",
+    href,
 }: {
     title: string
     value: string | number
     subtitle?: string
     icon: React.ElementType
     trend?: string
-    color?: "blue" | "emerald" | "amber" | "red" | "purple"
+    color?: "teal" | "emerald" | "amber" | "red" | "indigo"
+    href?: string
 }) {
     const colorMap = {
-        blue: "from-blue-500/20 to-blue-600/5 border-blue-500/20 text-blue-400",
-        emerald: "from-emerald-500/20 to-emerald-600/5 border-emerald-500/20 text-emerald-400",
-        amber: "from-amber-500/20 to-amber-600/5 border-amber-500/20 text-amber-400",
-        red: "from-red-500/20 to-red-600/5 border-red-500/20 text-red-400",
-        purple: "from-purple-500/20 to-purple-600/5 border-purple-500/20 text-purple-400",
+        teal: "from-teal-500/15 to-teal-600/5 border-teal-500/15 text-teal-400",
+        emerald: "from-emerald-500/15 to-emerald-600/5 border-emerald-500/15 text-emerald-400",
+        amber: "from-amber-500/15 to-amber-600/5 border-amber-500/15 text-amber-400",
+        red: "from-red-500/15 to-red-600/5 border-red-500/15 text-red-400",
+        indigo: "from-indigo-500/15 to-indigo-600/5 border-indigo-500/15 text-indigo-400",
     }
 
-    return (
-        <div className={`relative overflow-hidden rounded-xl border bg-gradient-to-br p-5 transition-all hover:scale-[1.02] ${colorMap[color]}`}>
+    const card = (
+        <div className={cn(
+            "relative overflow-hidden rounded-xl border bg-gradient-to-br p-5 transition-all",
+            colorMap[color],
+            href && "hover:scale-[1.02] cursor-pointer"
+        )}>
             <div className="flex items-start justify-between">
                 <div>
                     <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{title}</p>
                     <p className="text-3xl font-bold text-foreground mt-1">{value}</p>
                     {subtitle && <p className="text-xs text-muted-foreground mt-1">{subtitle}</p>}
                 </div>
-                <div className={`w-10 h-10 rounded-lg flex items-center justify-center bg-current/10`}>
+                <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-current/10">
                     <Icon className="w-5 h-5" />
                 </div>
             </div>
@@ -70,6 +77,11 @@ function KpiCard({
             )}
         </div>
     )
+
+    if (href) {
+        return <Link href={href}>{card}</Link>
+    }
+    return card
 }
 
 export default function DashboardPage() {
@@ -77,25 +89,37 @@ export default function DashboardPage() {
     const plannedTrips = demoTrips.filter(t => t.status === "PLANNED")
     const criticalAlerts = demoAlerts.filter(a => a.severity === "CRITICAL" && !a.isResolved)
     const warningAlerts = demoAlerts.filter(a => a.severity === "WARNING" && !a.isResolved)
+    const score = demoStats.complianceScore
 
     return (
         <MainLayout title="Dashboard">
             <div className="space-y-6 animate-fade-in">
-                {/* Welcome */}
+                {/* Welcome + Compliance Score */}
                 <div className="flex items-center justify-between">
                     <div>
-                        <h2 className="text-2xl font-bold text-foreground">Buonasera, Admin 👋</h2>
+                        <h2 className="text-2xl font-bold text-foreground">Dashboard Operativa</h2>
                         <p className="text-muted-foreground text-sm mt-1">
                             {new Date().toLocaleDateString("it-IT", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
                         </p>
                     </div>
-                    <Link
-                        href="/viaggi"
-                        className="flex items-center gap-2 px-4 py-2 rounded-lg gradient-primary text-white text-sm font-semibold hover:opacity-90 transition-opacity shadow-lg shadow-blue-500/25"
-                    >
-                        <Route className="w-4 h-4" />
-                        Nuovo Viaggio
-                    </Link>
+                    <div className="flex items-center gap-3">
+                        <Link href="/compliance" className={cn(
+                            "flex items-center gap-2 px-4 py-2 rounded-lg border text-sm font-semibold transition-colors",
+                            score >= 80 ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400 hover:bg-emerald-500/15" :
+                                score >= 60 ? "bg-amber-500/10 border-amber-500/20 text-amber-400 hover:bg-amber-500/15" :
+                                    "bg-red-500/10 border-red-500/20 text-red-400 hover:bg-red-500/15"
+                        )}>
+                            <Shield className="w-4 h-4" />
+                            Compliance: {score}%
+                        </Link>
+                        <Link
+                            href="/viaggi"
+                            className="flex items-center gap-2 px-4 py-2 rounded-lg gradient-primary text-white text-sm font-semibold hover:opacity-90 transition-opacity"
+                        >
+                            <Route className="w-4 h-4" />
+                            Nuovo Viaggio
+                        </Link>
+                    </div>
                 </div>
 
                 {/* KPI Cards */}
@@ -105,29 +129,32 @@ export default function DashboardPage() {
                         value={activeTrips.length}
                         subtitle={`${plannedTrips.length} pianificati`}
                         icon={Route}
-                        color="blue"
-                        trend="+2 questa settimana"
+                        color="teal"
+                        href="/viaggi"
                     />
                     <KpiCard
-                        title="Autisti Disponibili"
+                        title="Autisti"
                         value={`${demoStats.availableDrivers}/${demoStats.totalDrivers}`}
-                        subtitle="3 in servizio"
+                        subtitle={`${demoStats.totalDrivers - demoStats.availableDrivers} in servizio`}
                         icon={Users}
                         color="emerald"
+                        href="/autisti"
                     />
                     <KpiCard
-                        title="Flotta Disponibile"
+                        title="Flotta"
                         value={`${demoStats.availableVehicles}/${demoStats.totalVehicles}`}
-                        subtitle="2 in viaggio"
+                        subtitle={`${demoStats.totalVehicles - demoStats.availableVehicles} in viaggio`}
                         icon={Truck}
-                        color="purple"
+                        color="indigo"
+                        href="/veicoli"
                     />
                     <KpiCard
                         title="Alert Critici"
                         value={criticalAlerts.length}
                         subtitle={`${warningAlerts.length} avvisi`}
                         icon={AlertTriangle}
-                        color="red"
+                        color={criticalAlerts.length > 0 ? "red" : "emerald"}
+                        href="/compliance"
                     />
                 </div>
 
@@ -135,8 +162,8 @@ export default function DashboardPage() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div className="glass rounded-xl p-5">
                         <div className="flex items-center gap-3 mb-3">
-                            <div className="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center">
-                                <TrendingUp className="w-4 h-4 text-blue-400" />
+                            <div className="w-8 h-8 rounded-lg bg-teal-500/15 flex items-center justify-center">
+                                <TrendingUp className="w-4 h-4 text-teal-400" />
                             </div>
                             <p className="text-sm font-semibold text-foreground">Km Percorsi (Feb)</p>
                         </div>
@@ -149,45 +176,51 @@ export default function DashboardPage() {
 
                     <div className="glass rounded-xl p-5">
                         <div className="flex items-center gap-3 mb-3">
-                            <div className="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center">
+                            <div className="w-8 h-8 rounded-lg bg-emerald-500/15 flex items-center justify-center">
                                 <Euro className="w-4 h-4 text-emerald-400" />
                             </div>
                             <p className="text-sm font-semibold text-foreground">Costi Operativi (Feb)</p>
                         </div>
                         <p className="text-2xl font-bold text-foreground">{formatCurrency(demoStats.totalCostThisMonth)}</p>
                         <div className="mt-3 flex gap-3 text-xs text-muted-foreground">
-                            <span className="flex items-center gap-1"><Fuel className="w-3 h-3 text-amber-400" /> Carburante: {formatCurrency(2460)}</span>
+                            <span className="flex items-center gap-1"><Fuel className="w-3 h-3 text-amber-400" /> Carburante: {formatCurrency(3870)}</span>
                         </div>
                     </div>
 
-                    <div className="glass rounded-xl p-5">
-                        <div className="flex items-center gap-3 mb-3">
-                            <div className="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center">
-                                <CheckCircle2 className="w-4 h-4 text-purple-400" />
+                    <Link href="/compliance" className="glass rounded-xl p-5 hover:bg-secondary/30 transition-colors">
+                        <div className="flex items-center justify-between mb-3">
+                            <div className="flex items-center gap-3">
+                                <div className={cn(
+                                    "w-8 h-8 rounded-lg flex items-center justify-center",
+                                    score >= 80 ? "bg-emerald-500/15" : score >= 60 ? "bg-amber-500/15" : "bg-red-500/15"
+                                )}>
+                                    <Shield className={cn("w-4 h-4", getComplianceColor(score))} />
+                                </div>
+                                <p className="text-sm font-semibold text-foreground">Compliance Score</p>
                             </div>
-                            <p className="text-sm font-semibold text-foreground">Compliance Score</p>
+                            <ChevronRight className="w-4 h-4 text-muted-foreground" />
                         </div>
-                        <p className="text-2xl font-bold text-foreground">{demoStats.complianceScore}%</p>
+                        <p className={cn("text-2xl font-bold", getComplianceColor(score))}>{score}% — {getComplianceLabel(score)}</p>
                         <div className="mt-3 h-1.5 bg-secondary rounded-full overflow-hidden">
                             <div
-                                className="h-full rounded-full"
-                                style={{
-                                    width: `${demoStats.complianceScore}%`,
-                                    background: demoStats.complianceScore >= 90 ? "#10b981" : demoStats.complianceScore >= 70 ? "#f59e0b" : "#ef4444"
-                                }}
+                                className={cn(
+                                    "h-full rounded-full",
+                                    score >= 80 ? "bg-emerald-400" : score >= 60 ? "bg-amber-400" : "bg-red-400"
+                                )}
+                                style={{ width: `${score}%` }}
                             />
                         </div>
-                        <p className="text-xs text-muted-foreground mt-1">4 documenti da rinnovare</p>
-                    </div>
+                        <p className="text-xs text-muted-foreground mt-1">{criticalAlerts.length} critici, {warningAlerts.length} avvisi attivi</p>
+                    </Link>
                 </div>
 
                 {/* Main content grid */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    {/* Recent Trips */}
+                    {/* Recent Trips with Compliance Status */}
                     <div className="lg:col-span-2 glass rounded-xl overflow-hidden">
                         <div className="flex items-center justify-between p-5 border-b border-border/50">
                             <h3 className="text-sm font-semibold text-foreground">Viaggi Recenti</h3>
-                            <Link href="/viaggi" className="text-xs text-primary hover:underline">Vedi tutti →</Link>
+                            <Link href="/viaggi" className="text-xs text-primary hover:underline">Vedi tutti</Link>
                         </div>
                         <div className="overflow-x-auto">
                             <table className="w-full">
@@ -196,7 +229,7 @@ export default function DashboardPage() {
                                         <th className="text-left text-xs font-medium text-muted-foreground px-5 py-3 uppercase tracking-wider">Viaggio</th>
                                         <th className="text-left text-xs font-medium text-muted-foreground px-3 py-3 uppercase tracking-wider hidden md:table-cell">Autista</th>
                                         <th className="text-left text-xs font-medium text-muted-foreground px-3 py-3 uppercase tracking-wider">Stato</th>
-                                        <th className="text-left text-xs font-medium text-muted-foreground px-3 py-3 uppercase tracking-wider hidden lg:table-cell">Data</th>
+                                        <th className="text-center text-xs font-medium text-muted-foreground px-3 py-3 uppercase tracking-wider">Compliance</th>
                                         <th className="text-right text-xs font-medium text-muted-foreground px-5 py-3 uppercase tracking-wider hidden lg:table-cell">Km</th>
                                     </tr>
                                 </thead>
@@ -209,7 +242,7 @@ export default function DashboardPage() {
                                                     <div className="flex items-center gap-1 mt-0.5">
                                                         <MapPin className="w-3 h-3 text-muted-foreground" />
                                                         <p className="text-xs text-muted-foreground">
-                                                            {trip.stops[0]?.city} → {trip.stops[trip.stops.length - 1]?.city}
+                                                            {trip.stops[0]?.city} — {trip.stops[trip.stops.length - 1]?.city}
                                                         </p>
                                                     </div>
                                                 </div>
@@ -223,8 +256,14 @@ export default function DashboardPage() {
                                                     {getTripStatusLabel(trip.status)}
                                                 </span>
                                             </td>
-                                            <td className="px-3 py-3.5 hidden lg:table-cell">
-                                                <p className="text-xs text-muted-foreground">{formatDate(trip.startDate)}</p>
+                                            <td className="px-3 py-3.5 text-center">
+                                                {trip.complianceCheck.overallStatus === "OK" ? (
+                                                    <CheckCircle2 className="w-4 h-4 text-emerald-400 mx-auto" />
+                                                ) : trip.complianceCheck.overallStatus === "WARNING" ? (
+                                                    <AlertTriangle className="w-4 h-4 text-amber-400 mx-auto" />
+                                                ) : (
+                                                    <AlertTriangle className="w-4 h-4 text-red-400 mx-auto" />
+                                                )}
                                             </td>
                                             <td className="px-5 py-3.5 text-right hidden lg:table-cell">
                                                 <p className="text-sm text-foreground">{formatKm(trip.totalKm)}</p>
@@ -240,7 +279,7 @@ export default function DashboardPage() {
                     <div className="glass rounded-xl overflow-hidden">
                         <div className="flex items-center justify-between p-5 border-b border-border/50">
                             <h3 className="text-sm font-semibold text-foreground">Stato Autisti</h3>
-                            <Link href="/autisti" className="text-xs text-primary hover:underline">Vedi tutti →</Link>
+                            <Link href="/autisti" className="text-xs text-primary hover:underline">Vedi tutti</Link>
                         </div>
                         <div className="divide-y divide-border/20">
                             {demoDrivers.map((driver) => {
@@ -291,24 +330,26 @@ export default function DashboardPage() {
                     </div>
                 </div>
 
-                {/* Alerts */}
+                {/* Critical Alerts */}
                 {criticalAlerts.length > 0 && (
-                    <div className="glass rounded-xl overflow-hidden border border-red-500/20">
-                        <div className="flex items-center gap-3 p-5 border-b border-red-500/20 bg-red-500/5">
-                            <AlertTriangle className="w-5 h-5 text-red-400" />
-                            <h3 className="text-sm font-semibold text-red-400">Alert Critici — Azione Richiesta</h3>
+                    <div className="glass rounded-xl overflow-hidden border border-red-500/15">
+                        <div className="flex items-center justify-between p-5 border-b border-red-500/15 bg-red-500/5">
+                            <div className="flex items-center gap-3">
+                                <AlertTriangle className="w-5 h-5 text-red-400" />
+                                <h3 className="text-sm font-semibold text-red-400">Alert Critici — Azione Richiesta</h3>
+                            </div>
+                            <Link href="/compliance" className="text-xs text-primary hover:underline flex items-center gap-1">
+                                Compliance Center <ChevronRight className="w-3 h-3" />
+                            </Link>
                         </div>
                         <div className="divide-y divide-border/20">
                             {criticalAlerts.map((alert) => (
                                 <div key={alert.id} className="flex items-start gap-4 p-4">
                                     <div className="w-2 h-2 rounded-full bg-red-400 mt-1.5 flex-shrink-0 animate-pulse" />
-                                    <div>
+                                    <div className="flex-1">
                                         <p className="text-sm font-semibold text-foreground">{alert.title}</p>
                                         <p className="text-xs text-muted-foreground mt-0.5">{alert.message}</p>
                                     </div>
-                                    <Link href="/documenti" className="ml-auto text-xs text-primary hover:underline flex-shrink-0">
-                                        Gestisci →
-                                    </Link>
                                 </div>
                             ))}
                         </div>

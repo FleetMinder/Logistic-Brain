@@ -3,8 +3,6 @@
 import { MainLayout } from "@/components/layout/main-layout"
 import { useState } from "react"
 import {
-    Sparkles,
-    Send,
     Users,
     Truck,
     Route,
@@ -18,7 +16,7 @@ import {
     RefreshCw,
     ChevronDown,
     ChevronUp,
-    Brain,
+    Cpu,
     Target,
     TrendingUp,
     Shield,
@@ -35,42 +33,40 @@ import {
 
 const PRESETS = [
     {
-        label: "Assegna autisti ai viaggi",
-        icon: Users,
-        query:
-            "Analizza i viaggi pianificati e suggerisci la migliore assegnazione degli autisti disponibili, rispettando i limiti di ore di guida e i requisiti ADR.",
-    },
-    {
-        label: "Ottimizza rotte",
-        icon: Route,
-        query:
-            "Ottimizza le rotte dei viaggi pianificati per ridurre i chilometri totali percorsi e i costi di carburante e pedaggi.",
-    },
-    {
-        label: "Verifica compliance",
+        label: "Verifica compliance completa",
         icon: Shield,
         query:
-            "Verifica la conformità normativa di tutti i viaggi pianificati: ore di guida CE 561/2006, requisiti ADR, documenti CMR per i viaggi internazionali, scadenze certificazioni autisti.",
+            "Esegui una verifica compliance completa di tutti i viaggi pianificati e attivi: controlla validita documenti autisti (patente, CQC, ADR), documenti veicoli (revisione, assicurazione), ore di guida CE 561/2006 (giornaliere, settimanali, bisettimanali), scadenze scarico tachigrafo, e requisiti CMR per i viaggi internazionali. Segnala tutti i BLOCCHI e le VIOLAZIONI.",
     },
     {
-        label: "Riduci costi operativi",
-        icon: TrendingUp,
+        label: "Assegna autisti (compliance-first)",
+        icon: Users,
         query:
-            "Analizza le assegnazioni attuali e suggerisci come ridurre i costi operativi totali ottimizzando l'uso dei veicoli e le rotte.",
+            "Analizza i viaggi pianificati e suggerisci la migliore assegnazione degli autisti disponibili. Per ogni assegnazione VERIFICA: ore di guida residue sufficienti, documenti validi alla data del viaggio, certificato ADR se richiesto, scarico tachigrafo in regola. Blocca le assegnazioni non conformi e suggerisci alternative.",
     },
     {
-        label: "Pianifica la settimana",
+        label: "Scadenze critiche",
+        icon: AlertTriangle,
+        query:
+            "Elenca tutte le scadenze critiche della flotta nei prossimi 30 giorni: documenti autisti (patente, CQC, ADR), documenti veicoli (revisione, assicurazione), scarichi tachigrafo scaduti, e obblighi di retrofit tachigrafo V2. Per ogni scadenza indica l'impatto operativo e le azioni da intraprendere.",
+    },
+    {
+        label: "Pianifica settimana",
         icon: Target,
         query:
-            "Pianifica la migliore distribuzione dei viaggi per la settimana tenendo conto della disponibilità degli autisti, dei veicoli, dei limiti settimanali di ore di guida e delle priorità di consegna.",
+            "Pianifica la distribuzione dei viaggi per la settimana considerando: disponibilita autisti, ore di guida residue (giornaliere/settimanali/bisettimanali CE 561/2006), validita documenti, disponibilita veicoli, requisiti ADR, e obblighi di riposo settimanale. Priorita: conformita normativa prima, poi efficienza.",
+    },
+    {
+        label: "Ottimizza costi",
+        icon: TrendingUp,
+        query:
+            "Analizza le assegnazioni attuali e suggerisci come ridurre i costi operativi mantenendo la piena conformita normativa. Considera: ottimizzazione rotte, abbinamento autista-veicolo-viaggio, riduzione km a vuoto, e pianificazione pause obbligatorie lungo il percorso.",
     },
 ]
 
-// Format AI markdown-like response for rendering
 function formatAIResponse(text: string) {
     const lines = text.split("\n")
     return lines.map((line, i) => {
-        // Headers
         if (line.startsWith("## ")) {
             return (
                 <h3 key={i} className="text-base font-bold text-foreground mt-5 mb-2 first:mt-0">
@@ -85,7 +81,6 @@ function formatAIResponse(text: string) {
                 </h4>
             )
         }
-        // Bold numbered items like "1. **Title** —"
         if (/^\d+\.\s/.test(line)) {
             const parts = line.replace(/^\d+\.\s/, "")
             return (
@@ -97,7 +92,6 @@ function formatAIResponse(text: string) {
                 </div>
             )
         }
-        // Bullet points
         if (line.startsWith("- ") || line.startsWith("• ")) {
             const content = line.replace(/^[-•]\s/, "")
             return (
@@ -112,15 +106,12 @@ function formatAIResponse(text: string) {
                 </div>
             )
         }
-        // Horizontal rule
         if (line.startsWith("---")) {
             return <hr key={i} className="border-border/40 my-4" />
         }
-        // Empty line
         if (line.trim() === "") {
             return <div key={i} className="h-1" />
         }
-        // Normal paragraph
         return (
             <p
                 key={i}
@@ -164,9 +155,14 @@ export default function AiDispatchPage() {
                     isAvailable: d.isAvailable,
                     dailyHoursUsed: d.dailyHoursUsed,
                     weeklyHoursUsed: d.weeklyHoursUsed,
+                    biweeklyHoursUsed: d.biweeklyHoursUsed,
                     adrCertificate: d.adrCertificate,
                     licenseDeadline: d.licenseDeadline.toISOString(),
                     cqcDeadline: d.cqcDeadline.toISOString(),
+                    adrDeadline: d.adrDeadline?.toISOString() ?? null,
+                    tachographCardDeadline: d.tachographCardDeadline.toISOString(),
+                    lastTachographDownload: d.lastTachographDownload.toISOString(),
+                    lastWeeklyRest: d.lastWeeklyRest?.toISOString() ?? null,
                     notes: d.notes,
                 })),
                 vehicles: demoVehicles.map((v) => ({
@@ -178,6 +174,7 @@ export default function AiDispatchPage() {
                     maxCapacityKg: v.maxCapacityKg,
                     maxCapacityM3: v.maxCapacityM3 ?? null,
                     isAvailable: v.isAvailable,
+                    tachographType: v.tachographType,
                     revisionDeadline: v.revisionDeadline.toISOString(),
                     insuranceDeadline: v.insuranceDeadline.toISOString(),
                     notes: v.notes ?? null,
@@ -195,6 +192,10 @@ export default function AiDispatchPage() {
                     stops: t.stops.map((s) => ({ city: s.city, type: s.type })),
                     driverId: t.driverId,
                     vehicleId: t.vehicleId,
+                    complianceCheck: t.complianceCheck ? {
+                        overallStatus: t.complianceCheck.overallStatus,
+                        issues: t.complianceCheck.issues,
+                    } : undefined,
                 })),
             }
 
@@ -240,27 +241,26 @@ export default function AiDispatchPage() {
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
                         <div className="flex items-center gap-3">
-                            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center shadow-lg shadow-violet-500/30">
-                                <Brain className="w-5 h-5 text-white" />
+                            <div className="w-9 h-9 rounded-lg gradient-primary flex items-center justify-center">
+                                <Cpu className="w-5 h-5 text-white" />
                             </div>
                             <div>
                                 <h2 className="text-xl font-bold text-foreground">AI Dispatch</h2>
                                 <p className="text-xs text-muted-foreground">
-                                    Ottimizzazione intelligente delle rotte e assegnazioni
+                                    Compliance-first dispatch — verifica normativa automatica
                                 </p>
                             </div>
                         </div>
                     </div>
-                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/20">
-                        <div className="w-2 h-2 rounded-full bg-violet-400 animate-pulse" />
-                        <span className="text-xs font-medium text-violet-400">Gemini 2.0 Flash</span>
+                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/15">
+                        <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+                        <span className="text-xs font-medium text-primary">Gemini 2.0 Flash</span>
                     </div>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     {/* Left panel — Context */}
                     <div className="lg:col-span-1 space-y-4">
-                        {/* Context header */}
                         <div className="glass rounded-xl overflow-hidden">
                             <button
                                 onClick={() => setContextExpanded(!contextExpanded)}
@@ -306,7 +306,7 @@ export default function AiDispatchPage() {
                                                             {d.name} {d.surname}
                                                         </span>
                                                         {d.adrCertificate && (
-                                                            <span className="px-1 py-0.5 rounded text-[9px] font-bold bg-orange-500/20 text-orange-400 border border-orange-500/20">
+                                                            <span className="px-1 py-0.5 rounded text-[9px] font-bold bg-orange-500/15 text-orange-400 border border-orange-500/15">
                                                                 ADR
                                                             </span>
                                                         )}
@@ -323,8 +323,8 @@ export default function AiDispatchPage() {
                                     {/* Available Vehicles */}
                                     <div>
                                         <div className="flex items-center gap-2 mb-2">
-                                            <Truck className="w-3.5 h-3.5 text-blue-400" />
-                                            <span className="text-xs font-semibold text-blue-400 uppercase tracking-wider">
+                                            <Truck className="w-3.5 h-3.5 text-sky-400" />
+                                            <span className="text-xs font-semibold text-sky-400 uppercase tracking-wider">
                                                 Veicoli disponibili ({availableVehicles.length}/{demoVehicles.length})
                                             </span>
                                         </div>
@@ -334,14 +334,14 @@ export default function AiDispatchPage() {
                                                     key={v.id}
                                                     className={cn(
                                                         "flex items-center justify-between text-xs p-2 rounded-lg",
-                                                        v.isAvailable ? "bg-blue-500/5 border border-blue-500/10" : "bg-secondary/50 opacity-60"
+                                                        v.isAvailable ? "bg-sky-500/5 border border-sky-500/10" : "bg-secondary/50 opacity-60"
                                                     )}
                                                 >
                                                     <div className="flex items-center gap-2">
                                                         <div
                                                             className={cn(
                                                                 "w-1.5 h-1.5 rounded-full",
-                                                                v.isAvailable ? "bg-blue-400" : "bg-red-400"
+                                                                v.isAvailable ? "bg-sky-400" : "bg-red-400"
                                                             )}
                                                         />
                                                         <span className="font-medium text-foreground">{v.plate}</span>
@@ -387,14 +387,14 @@ export default function AiDispatchPage() {
                                                         </span>
                                                     </div>
                                                     <div className="flex items-center gap-2 text-muted-foreground flex-wrap">
-                                                        <span>{t.stops[0]?.city} → {t.stops[t.stops.length - 1]?.city}</span>
+                                                        <span>{t.stops[0]?.city} — {t.stops[t.stops.length - 1]?.city}</span>
                                                         {t.isAdr && (
                                                             <span className="flex items-center gap-0.5 text-orange-400">
                                                                 <AlertTriangle className="w-2.5 h-2.5" /> ADR
                                                             </span>
                                                         )}
                                                         {t.isInternational && (
-                                                            <span className="flex items-center gap-0.5 text-purple-400">
+                                                            <span className="flex items-center gap-0.5 text-indigo-400">
                                                                 <Globe className="w-2.5 h-2.5" /> INT
                                                             </span>
                                                         )}
@@ -419,7 +419,7 @@ export default function AiDispatchPage() {
                                     value: availableDrivers.length,
                                     color: "text-emerald-400",
                                 },
-                                { label: "Veicoli disponibili", value: availableVehicles.length, color: "text-blue-400" },
+                                { label: "Veicoli disponibili", value: availableVehicles.length, color: "text-sky-400" },
                                 {
                                     label: "Viaggi da pianificare",
                                     value: demoTrips.filter((t) => t.status === "PLANNED").length,
@@ -433,7 +433,7 @@ export default function AiDispatchPage() {
                                 {
                                     label: "Viaggi internazionali",
                                     value: plannedTrips.filter((t) => t.isInternational).length,
-                                    color: "text-purple-400",
+                                    color: "text-indigo-400",
                                 },
                             ].map((stat) => (
                                 <div key={stat.label} className="flex items-center justify-between text-xs">
@@ -459,10 +459,10 @@ export default function AiDispatchPage() {
                                             key={preset.label}
                                             onClick={() => handlePreset(preset)}
                                             disabled={isLoading}
-                                            className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg bg-secondary/60 border border-border hover:border-violet-500/40 hover:bg-violet-500/5 hover:text-violet-400 transition-all text-left group disabled:opacity-50 disabled:cursor-not-allowed"
+                                            className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg bg-secondary/60 border border-border hover:border-primary/30 hover:bg-primary/5 hover:text-primary transition-all text-left group disabled:opacity-50 disabled:cursor-not-allowed"
                                         >
-                                            <Icon className="w-4 h-4 text-muted-foreground group-hover:text-violet-400 transition-colors flex-shrink-0" />
-                                            <span className="text-xs font-medium text-foreground group-hover:text-violet-300 transition-colors">
+                                            <Icon className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0" />
+                                            <span className="text-xs font-medium text-foreground group-hover:text-primary transition-colors">
                                                 {preset.label}
                                             </span>
                                         </button>
@@ -475,7 +475,7 @@ export default function AiDispatchPage() {
                         <div className="glass rounded-xl overflow-hidden">
                             <div className="p-4 border-b border-border/50">
                                 <div className="flex items-center gap-2 mb-3">
-                                    <Sparkles className="w-4 h-4 text-violet-400" />
+                                    <Cpu className="w-4 h-4 text-primary" />
                                     <p className="text-sm font-semibold text-foreground">
                                         Richiesta personalizzata
                                     </p>
@@ -489,20 +489,20 @@ export default function AiDispatchPage() {
                                         }
                                     }}
                                     placeholder="Descrivi cosa vuoi ottimizzare... Es: &quot;Assegna gli autisti disponibili tenendo conto dei requisiti ADR per i viaggi di domani&quot;"
-                                    className="w-full bg-secondary/50 border border-border rounded-lg px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500/30 resize-none min-h-[80px] transition-all"
+                                    className="w-full bg-secondary/50 border border-border rounded-lg px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/25 resize-none min-h-[80px] transition-all"
                                     rows={3}
                                 />
                                 <div className="flex items-center justify-between mt-3">
                                     <p className="text-xs text-muted-foreground">
                                         <kbd className="px-1.5 py-0.5 rounded bg-secondary border border-border text-[10px]">
-                                            ⌘ Enter
+                                            Cmd+Enter
                                         </kbd>{" "}
                                         per analizzare
                                     </p>
                                     <button
                                         onClick={() => handleAnalyze()}
                                         disabled={isLoading || !query.trim()}
-                                        className="flex items-center gap-2 px-5 py-2 rounded-lg bg-gradient-to-r from-violet-600 to-purple-600 text-white text-sm font-semibold hover:opacity-90 transition-all shadow-lg shadow-violet-500/25 disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none"
+                                        className="flex items-center gap-2 px-5 py-2 rounded-lg gradient-primary text-white text-sm font-semibold hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
                                         {isLoading ? (
                                             <>
@@ -522,12 +522,12 @@ export default function AiDispatchPage() {
 
                         {/* Loading state */}
                         {isLoading && (
-                            <div className="glass rounded-xl p-8 flex flex-col items-center justify-center gap-4 border border-violet-500/20 bg-violet-500/5">
+                            <div className="glass rounded-xl p-8 flex flex-col items-center justify-center gap-4 border border-primary/15 bg-primary/5">
                                 <div className="relative">
-                                    <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center shadow-xl shadow-violet-500/30">
-                                        <Brain className="w-8 h-8 text-white" />
+                                    <div className="w-16 h-16 rounded-2xl gradient-primary flex items-center justify-center">
+                                        <Cpu className="w-8 h-8 text-white" />
                                     </div>
-                                    <div className="absolute -inset-2 rounded-3xl border-2 border-violet-500/30 animate-ping" />
+                                    <div className="absolute -inset-2 rounded-3xl border-2 border-primary/25 animate-ping" />
                                 </div>
                                 <div className="text-center">
                                     <p className="text-sm font-semibold text-foreground">
@@ -541,7 +541,7 @@ export default function AiDispatchPage() {
                                     {[0, 1, 2].map((i) => (
                                         <div
                                             key={i}
-                                            className="w-2 h-2 rounded-full bg-violet-500 animate-bounce"
+                                            className="w-2 h-2 rounded-full bg-primary animate-bounce"
                                             style={{ animationDelay: `${i * 150}ms` }}
                                         />
                                     ))}
@@ -551,13 +551,13 @@ export default function AiDispatchPage() {
 
                         {/* Error state */}
                         {error && (
-                            <div className="glass rounded-xl overflow-hidden border border-red-500/30">
-                                <div className="flex items-center gap-3 p-4 bg-red-500/5 border-b border-red-500/20">
+                            <div className="glass rounded-xl overflow-hidden border border-red-500/25">
+                                <div className="flex items-center gap-3 p-4 bg-red-500/5 border-b border-red-500/15">
                                     <AlertTriangle className="w-5 h-5 text-red-400 flex-shrink-0" />
                                     <div>
                                         <p className="text-sm font-semibold text-red-400">{error}</p>
                                         {errorDetails && (
-                                            <p className="text-xs text-red-400/70 mt-0.5">{errorDetails}</p>
+                                            <p className="text-xs text-red-400/60 mt-0.5">{errorDetails}</p>
                                         )}
                                     </div>
                                 </div>
@@ -571,7 +571,7 @@ export default function AiDispatchPage() {
                                                     href="https://aistudio.google.com/"
                                                     target="_blank"
                                                     rel="noopener noreferrer"
-                                                    className="text-violet-400 hover:underline"
+                                                    className="text-primary hover:underline"
                                                 >
                                                     Google AI Studio
                                                 </a>
@@ -596,11 +596,11 @@ export default function AiDispatchPage() {
 
                         {/* AI Response */}
                         {aiResponse && !isLoading && (
-                            <div className="glass rounded-xl overflow-hidden border border-violet-500/20 animate-fade-in">
-                                <div className="flex items-center justify-between p-4 border-b border-violet-500/15 bg-violet-500/5">
+                            <div className="glass rounded-xl overflow-hidden border border-primary/15 animate-fade-in">
+                                <div className="flex items-center justify-between p-4 border-b border-primary/10 bg-primary/5">
                                     <div className="flex items-center gap-2">
-                                        <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center">
-                                            <Sparkles className="w-3.5 h-3.5 text-white" />
+                                        <div className="w-6 h-6 rounded-lg gradient-primary flex items-center justify-center">
+                                            <Cpu className="w-3.5 h-3.5 text-white" />
                                         </div>
                                         <span className="text-sm font-semibold text-foreground">
                                             Analisi AI
@@ -635,8 +635,8 @@ export default function AiDispatchPage() {
                         {/* Empty state */}
                         {!aiResponse && !isLoading && !error && (
                             <div className="glass rounded-xl p-12 flex flex-col items-center justify-center gap-4 text-center border border-dashed border-border/50">
-                                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-violet-500/20 to-purple-600/20 border border-violet-500/20 flex items-center justify-center">
-                                    <Brain className="w-8 h-8 text-violet-400/70" />
+                                <div className="w-16 h-16 rounded-2xl bg-primary/10 border border-primary/15 flex items-center justify-center">
+                                    <Cpu className="w-8 h-8 text-primary/60" />
                                 </div>
                                 <div>
                                     <p className="text-sm font-semibold text-foreground">
@@ -649,15 +649,15 @@ export default function AiDispatchPage() {
                                 </div>
                                 <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground">
                                     <span className="flex items-center gap-1.5">
-                                        <Package className="w-3.5 h-3.5 text-violet-400" />
+                                        <Package className="w-3.5 h-3.5 text-primary" />
                                         {demoTrips.length} viaggi analizzati
                                     </span>
                                     <span className="flex items-center gap-1.5">
-                                        <Users className="w-3.5 h-3.5 text-violet-400" />
+                                        <Users className="w-3.5 h-3.5 text-primary" />
                                         {demoDrivers.length} autisti
                                     </span>
                                     <span className="flex items-center gap-1.5">
-                                        <Truck className="w-3.5 h-3.5 text-violet-400" />
+                                        <Truck className="w-3.5 h-3.5 text-primary" />
                                         {demoVehicles.length} veicoli
                                     </span>
                                 </div>

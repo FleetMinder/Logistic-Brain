@@ -5,7 +5,6 @@ import { useState } from "react"
 import {
     Plus,
     Search,
-    Filter,
     MapPin,
     Calendar,
     Truck,
@@ -56,7 +55,7 @@ export default function ViaggiPage() {
                     </div>
                     <button
                         onClick={() => setShowModal(true)}
-                        className="flex items-center gap-2 px-4 py-2 rounded-lg gradient-primary text-white text-sm font-semibold hover:opacity-90 transition-opacity shadow-lg shadow-blue-500/25"
+                        className="flex items-center gap-2 px-4 py-2 rounded-lg gradient-primary text-white text-sm font-semibold hover:opacity-90 transition-opacity"
                     >
                         <Plus className="w-4 h-4" />
                         Nuovo Viaggio
@@ -72,7 +71,7 @@ export default function ViaggiPage() {
                             placeholder="Cerca per merce, autista, targa..."
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            className="w-full pl-9 pr-4 py-2.5 text-sm bg-secondary border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                            className="w-full pl-9 pr-4 py-2.5 text-sm bg-secondary border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40"
                         />
                     </div>
                     <div className="flex gap-2 flex-wrap">
@@ -83,7 +82,7 @@ export default function ViaggiPage() {
                                 className={cn(
                                     "px-3 py-2 rounded-lg text-xs font-medium border transition-all",
                                     statusFilter === s
-                                        ? "bg-primary/20 text-primary border-primary/30"
+                                        ? "bg-primary/15 text-primary border-primary/25"
                                         : "bg-secondary text-muted-foreground border-border hover:text-foreground"
                                 )}
                             >
@@ -108,13 +107,13 @@ export default function ViaggiPage() {
                                             {getTripStatusLabel(trip.status)}
                                         </span>
                                         {trip.isAdr && (
-                                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-orange-500/20 text-orange-400 border border-orange-500/30">
+                                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-orange-500/15 text-orange-400 border border-orange-500/25">
                                                 <AlertTriangle className="w-3 h-3" />
                                                 ADR
                                             </span>
                                         )}
                                         {trip.isInternational && (
-                                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-purple-500/20 text-purple-400 border border-purple-500/30">
+                                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-indigo-500/15 text-indigo-400 border border-indigo-500/25">
                                                 <Globe className="w-3 h-3" />
                                                 Internazionale
                                             </span>
@@ -126,7 +125,7 @@ export default function ViaggiPage() {
                                     <div className="flex items-center gap-1 mt-1">
                                         <MapPin className="w-3.5 h-3.5 text-muted-foreground" />
                                         <p className="text-sm text-muted-foreground">
-                                            {trip.stops.map(s => s.city).join(" → ")}
+                                            {trip.stops.map(s => s.city).join(" — ")}
                                         </p>
                                     </div>
 
@@ -182,27 +181,27 @@ export default function ViaggiPage() {
                     <div className="bg-card border border-border rounded-2xl w-full max-w-lg shadow-2xl animate-fade-in">
                         <div className="flex items-center justify-between p-6 border-b border-border">
                             <h2 className="text-lg font-semibold text-foreground">Nuovo Viaggio</h2>
-                            <button onClick={() => setShowModal(false)} className="text-muted-foreground hover:text-foreground">✕</button>
+                            <button onClick={() => setShowModal(false)} className="text-muted-foreground hover:text-foreground text-lg leading-none">&times;</button>
                         </div>
                         <div className="p-6 space-y-4">
                             <div>
                                 <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Tipo Merce</label>
-                                <input type="text" placeholder="es. Materiali edili, ADR Classe 3..." className="mt-1.5 w-full px-3 py-2.5 text-sm bg-secondary border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50" />
+                                <input type="text" placeholder="es. Materiali edili, ADR Classe 3..." className="mt-1.5 w-full px-3 py-2.5 text-sm bg-secondary border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40" />
                             </div>
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
                                     <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Data Partenza</label>
-                                    <input type="datetime-local" className="mt-1.5 w-full px-3 py-2.5 text-sm bg-secondary border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50" />
+                                    <input type="datetime-local" className="mt-1.5 w-full px-3 py-2.5 text-sm bg-secondary border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40" />
                                 </div>
                                 <div>
                                     <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Peso (kg)</label>
-                                    <input type="number" placeholder="0" className="mt-1.5 w-full px-3 py-2.5 text-sm bg-secondary border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50" />
+                                    <input type="number" placeholder="0" className="mt-1.5 w-full px-3 py-2.5 text-sm bg-secondary border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40" />
                                 </div>
                             </div>
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
                                     <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Autista</label>
-                                    <select className="mt-1.5 w-full px-3 py-2.5 text-sm bg-secondary border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50">
+                                    <select className="mt-1.5 w-full px-3 py-2.5 text-sm bg-secondary border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40">
                                         <option value="">Seleziona autista</option>
                                         <option>Marco Rossi</option>
                                         <option>Luigi Ferrari</option>
@@ -212,7 +211,7 @@ export default function ViaggiPage() {
                                 </div>
                                 <div>
                                     <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Veicolo</label>
-                                    <select className="mt-1.5 w-full px-3 py-2.5 text-sm bg-secondary border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50">
+                                    <select className="mt-1.5 w-full px-3 py-2.5 text-sm bg-secondary border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40">
                                         <option value="">Seleziona veicolo</option>
                                         <option>AB 123 CD — Iveco Daily</option>
                                         <option>IJ 789 KL — Volvo FH Frigo</option>
