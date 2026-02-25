@@ -50,10 +50,10 @@ export default function DocumentiPage() {
     }
 
     const statusIcon = {
-        VALID: <CheckCircle2 className="w-4 h-4 text-emerald-400" />,
-        EXPIRING_SOON: <Clock className="w-4 h-4 text-amber-400" />,
-        EXPIRED: <AlertTriangle className="w-4 h-4 text-red-400" />,
-        MISSING: <AlertTriangle className="w-4 h-4 text-zinc-400" />,
+        VALID: <CheckCircle2 className="w-4 h-4 text-emerald-600" />,
+        EXPIRING_SOON: <Clock className="w-4 h-4 text-amber-600" />,
+        EXPIRED: <AlertTriangle className="w-4 h-4 text-red-600" />,
+        MISSING: <AlertTriangle className="w-4 h-4 text-zinc-500" />,
     }
 
     const statusLabel = {
@@ -85,20 +85,20 @@ export default function DocumentiPage() {
                 {(expired > 0 || expiringSoon > 0) && (
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         {expired > 0 && (
-                            <div className="flex items-center gap-3 p-4 rounded-xl bg-red-500/8 border border-red-500/15">
-                                <AlertTriangle className="w-5 h-5 text-red-400 flex-shrink-0" />
+                            <div className="flex items-center gap-3 p-4 rounded-xl bg-red-50 border border-red-200">
+                                <AlertTriangle className="w-5 h-5 text-red-600 flex-shrink-0" />
                                 <div>
-                                    <p className="text-sm font-semibold text-red-400">{expired} Documenti Scaduti</p>
-                                    <p className="text-xs text-red-400/60">Richiedono rinnovo immediato</p>
+                                    <p className="text-sm font-semibold text-red-600">{expired} Documenti Scaduti</p>
+                                    <p className="text-xs text-red-600/60">Richiedono rinnovo immediato</p>
                                 </div>
                             </div>
                         )}
                         {expiringSoon > 0 && (
-                            <div className="flex items-center gap-3 p-4 rounded-xl bg-amber-500/8 border border-amber-500/15">
-                                <Clock className="w-5 h-5 text-amber-400 flex-shrink-0" />
+                            <div className="flex items-center gap-3 p-4 rounded-xl bg-amber-50 border border-amber-200">
+                                <Clock className="w-5 h-5 text-amber-600 flex-shrink-0" />
                                 <div>
-                                    <p className="text-sm font-semibold text-amber-400">{expiringSoon} In Scadenza (30gg)</p>
-                                    <p className="text-xs text-amber-400/60">Pianifica il rinnovo</p>
+                                    <p className="text-sm font-semibold text-amber-600">{expiringSoon} In Scadenza (30gg)</p>
+                                    <p className="text-xs text-amber-600/60">Pianifica il rinnovo</p>
                                 </div>
                             </div>
                         )}
@@ -169,9 +169,9 @@ export default function DocumentiPage() {
                                             {statusIcon[doc.status as keyof typeof statusIcon]}
                                             <span className={cn(
                                                 "text-xs font-medium",
-                                                doc.status === "VALID" ? "text-emerald-400" :
-                                                    doc.status === "EXPIRING_SOON" ? "text-amber-400" :
-                                                        (doc.status as string) === "EXPIRED" ? "text-red-400" : "text-zinc-400"
+                                                doc.status === "VALID" ? "text-emerald-600" :
+                                                    doc.status === "EXPIRING_SOON" ? "text-amber-600" :
+                                                        (doc.status as string) === "EXPIRED" ? "text-red-600" : "text-zinc-500"
                                             )}>
                                                 {statusLabel[doc.status as keyof typeof statusLabel]}
                                             </span>

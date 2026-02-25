@@ -1,5 +1,5 @@
-// Demo data — Compliance & Operations Hub
-// Dates relative to Feb 2026 for realistic compliance scenarios
+// Demo data — Logistic Brain: Ottimizzazione Trasporti con AI
+// Dates relative to Feb 2026 for realistic scenarios
 
 export const demoDrivers = [
     {
@@ -527,4 +527,80 @@ export const demoStats = {
         drivingHours: 72,
         tachograph: 50,
     },
+    // Optimization metrics
+    avgRouteEfficiency: 87,
+    potentialMonthlySavings: 1850,
+    avgDeliveryTimeReduction: 12,
+    fuelEfficiencyScore: 78,
 }
+
+export const demoOptimizationSuggestions = [
+    {
+        id: "opt-1",
+        type: "ROUTE" as const,
+        priority: "HIGH" as const,
+        title: "Consolidamento rotte Milano-Roma",
+        description: "I viaggi trip-1 e trip-4 condividono tratte simili. Consolidando le consegne si risparmiano circa 120 km e 2h di guida.",
+        estimatedSavings: 280,
+        estimatedKmReduction: 120,
+        estimatedTimeReduction: 2,
+        affectedTrips: ["trip-1", "trip-4"],
+        status: "PENDING" as const,
+    },
+    {
+        id: "opt-2",
+        type: "FUEL" as const,
+        priority: "MEDIUM" as const,
+        title: "Ottimizzazione consumo carburante A1",
+        description: "L'analisi dei dati mostra un consumo medio di 32L/100km sulla tratta A1. Suggerendo velocita costante a 85 km/h si puo ridurre a 28L/100km.",
+        estimatedSavings: 450,
+        estimatedKmReduction: 0,
+        estimatedTimeReduction: 0,
+        affectedTrips: ["trip-1", "trip-2", "trip-5"],
+        status: "PENDING" as const,
+    },
+    {
+        id: "opt-3",
+        type: "SCHEDULE" as const,
+        priority: "HIGH" as const,
+        title: "Ribilanciamento carichi settimanali autisti",
+        description: "Marco Rossi e a 47h/56h settimanali, mentre Giovanna Conti e a 0h. Riassegnando il viaggio trip-1 a Conti si equilibrano i carichi e si evitano straordinari.",
+        estimatedSavings: 320,
+        estimatedKmReduction: 0,
+        estimatedTimeReduction: 0,
+        affectedTrips: ["trip-1"],
+        status: "PENDING" as const,
+    },
+    {
+        id: "opt-4",
+        type: "ROUTE" as const,
+        priority: "LOW" as const,
+        title: "Percorso alternativo Torino-Napoli via E45",
+        description: "Per il viaggio ADR trip-2, la E45 presenta meno traffico e stazioni di sosta ADR autorizzate. Tempo stimato invariato, costo pedaggi ridotto.",
+        estimatedSavings: 95,
+        estimatedKmReduction: 30,
+        estimatedTimeReduction: 0.5,
+        affectedTrips: ["trip-2"],
+        status: "PENDING" as const,
+    },
+    {
+        id: "opt-5",
+        type: "FLEET" as const,
+        priority: "MEDIUM" as const,
+        title: "Utilizzo veicolo DAF XF 480 sottoutilizzato",
+        description: "Il DAF XF 480 (QR 345 ST) ha un tasso di utilizzo del 35% questo mese. Assegnandolo al viaggio trip-6 al posto del MAN TGX si migliora l'efficienza flotta.",
+        estimatedSavings: 180,
+        estimatedKmReduction: 0,
+        estimatedTimeReduction: 0,
+        affectedTrips: ["trip-6"],
+        status: "PENDING" as const,
+    },
+]
+
+export const demoRouteEfficiency = [
+    { route: "Milano — Roma", trips: 8, avgKm: 580, avgCost: 890, efficiency: 92, trend: "+3%" },
+    { route: "Torino — Napoli", trips: 4, avgKm: 920, avgCost: 1450, efficiency: 85, trend: "+1%" },
+    { route: "Bologna — Parigi", trips: 3, avgKm: 1240, avgCost: 2800, efficiency: 88, trend: "-2%" },
+    { route: "Verona — Monaco", trips: 5, avgKm: 480, avgCost: 980, efficiency: 91, trend: "+5%" },
+    { route: "Firenze — Livorno", trips: 12, avgKm: 120, avgCost: 280, efficiency: 95, trend: "+2%" },
+]

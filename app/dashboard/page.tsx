@@ -13,8 +13,10 @@ import {
     Euro,
     Shield,
     ChevronRight,
+    Cpu,
+    Zap,
 } from "lucide-react"
-import { demoStats, demoTrips, demoDrivers, demoAlerts } from "@/lib/demo-data"
+import { demoStats, demoTrips, demoDrivers, demoAlerts, demoOptimizationSuggestions } from "@/lib/demo-data"
 import {
     formatKm,
     formatCurrency,
@@ -46,11 +48,11 @@ function KpiCard({
     href?: string
 }) {
     const colorMap = {
-        teal: "from-teal-500/15 to-teal-600/5 border-teal-500/15 text-teal-400",
-        emerald: "from-emerald-500/15 to-emerald-600/5 border-emerald-500/15 text-emerald-400",
-        amber: "from-amber-500/15 to-amber-600/5 border-amber-500/15 text-amber-400",
-        red: "from-red-500/15 to-red-600/5 border-red-500/15 text-red-400",
-        indigo: "from-indigo-500/15 to-indigo-600/5 border-indigo-500/15 text-indigo-400",
+        teal: "from-teal-50 to-teal-50/50 border-teal-200 text-teal-600",
+        emerald: "from-emerald-50 to-emerald-50/50 border-emerald-200 text-emerald-600",
+        amber: "from-amber-50 to-amber-50/50 border-amber-200 text-amber-600",
+        red: "from-red-50 to-red-50/50 border-red-200 text-red-600",
+        indigo: "from-indigo-50 to-indigo-50/50 border-indigo-200 text-indigo-600",
     }
 
     const card = (
@@ -71,8 +73,8 @@ function KpiCard({
             </div>
             {trend && (
                 <div className="flex items-center gap-1 mt-3">
-                    <ArrowUpRight className="w-3 h-3 text-emerald-400" />
-                    <span className="text-xs text-emerald-400">{trend}</span>
+                    <ArrowUpRight className="w-3 h-3 text-emerald-600" />
+                    <span className="text-xs text-emerald-600">{trend}</span>
                 </div>
             )}
         </div>
@@ -94,30 +96,30 @@ export default function DashboardPage() {
     return (
         <MainLayout title="Dashboard">
             <div className="space-y-6 animate-fade-in">
-                {/* Welcome + Compliance Score */}
+                {/* Welcome + Actions */}
                 <div className="flex items-center justify-between">
                     <div>
-                        <h2 className="text-2xl font-bold text-foreground">Dashboard Operativa</h2>
+                        <h2 className="text-2xl font-bold text-foreground">Panoramica Operativa</h2>
                         <p className="text-muted-foreground text-sm mt-1">
                             {new Date().toLocaleDateString("it-IT", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
                         </p>
                     </div>
                     <div className="flex items-center gap-3">
                         <Link href="/compliance" className={cn(
-                            "flex items-center gap-2 px-4 py-2 rounded-lg border text-sm font-semibold transition-colors",
-                            score >= 80 ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400 hover:bg-emerald-500/15" :
-                                score >= 60 ? "bg-amber-500/10 border-amber-500/20 text-amber-400 hover:bg-amber-500/15" :
-                                    "bg-red-500/10 border-red-500/20 text-red-400 hover:bg-red-500/15"
+                            "flex items-center gap-2 px-3 py-2 rounded-lg border text-xs font-semibold transition-colors",
+                            score >= 80 ? "bg-emerald-50 border-emerald-200 text-emerald-600" :
+                                score >= 60 ? "bg-amber-50 border-amber-200 text-amber-600" :
+                                    "bg-red-50 border-red-200 text-red-600"
                         )}>
-                            <Shield className="w-4 h-4" />
-                            Compliance: {score}%
+                            <Shield className="w-3.5 h-3.5" />
+                            {score}%
                         </Link>
                         <Link
-                            href="/viaggi"
+                            href="/ottimizzazione"
                             className="flex items-center gap-2 px-4 py-2 rounded-lg gradient-primary text-white text-sm font-semibold hover:opacity-90 transition-opacity"
                         >
-                            <Route className="w-4 h-4" />
-                            Nuovo Viaggio
+                            <Zap className="w-4 h-4" />
+                            Ottimizza con AI
                         </Link>
                     </div>
                 </div>
@@ -162,8 +164,8 @@ export default function DashboardPage() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div className="glass rounded-xl p-5">
                         <div className="flex items-center gap-3 mb-3">
-                            <div className="w-8 h-8 rounded-lg bg-teal-500/15 flex items-center justify-center">
-                                <TrendingUp className="w-4 h-4 text-teal-400" />
+                            <div className="w-8 h-8 rounded-lg bg-teal-50 flex items-center justify-center">
+                                <TrendingUp className="w-4 h-4 text-teal-600" />
                             </div>
                             <p className="text-sm font-semibold text-foreground">Km Percorsi (Feb)</p>
                         </div>
@@ -176,14 +178,14 @@ export default function DashboardPage() {
 
                     <div className="glass rounded-xl p-5">
                         <div className="flex items-center gap-3 mb-3">
-                            <div className="w-8 h-8 rounded-lg bg-emerald-500/15 flex items-center justify-center">
-                                <Euro className="w-4 h-4 text-emerald-400" />
+                            <div className="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center">
+                                <Euro className="w-4 h-4 text-emerald-600" />
                             </div>
                             <p className="text-sm font-semibold text-foreground">Costi Operativi (Feb)</p>
                         </div>
                         <p className="text-2xl font-bold text-foreground">{formatCurrency(demoStats.totalCostThisMonth)}</p>
                         <div className="mt-3 flex gap-3 text-xs text-muted-foreground">
-                            <span className="flex items-center gap-1"><Fuel className="w-3 h-3 text-amber-400" /> Carburante: {formatCurrency(3870)}</span>
+                            <span className="flex items-center gap-1"><Fuel className="w-3 h-3 text-amber-600" /> Carburante: {formatCurrency(3870)}</span>
                         </div>
                     </div>
 
@@ -192,7 +194,7 @@ export default function DashboardPage() {
                             <div className="flex items-center gap-3">
                                 <div className={cn(
                                     "w-8 h-8 rounded-lg flex items-center justify-center",
-                                    score >= 80 ? "bg-emerald-500/15" : score >= 60 ? "bg-amber-500/15" : "bg-red-500/15"
+                                    score >= 80 ? "bg-emerald-50" : score >= 60 ? "bg-amber-50" : "bg-red-50"
                                 )}>
                                     <Shield className={cn("w-4 h-4", getComplianceColor(score))} />
                                 </div>
@@ -205,13 +207,46 @@ export default function DashboardPage() {
                             <div
                                 className={cn(
                                     "h-full rounded-full",
-                                    score >= 80 ? "bg-emerald-400" : score >= 60 ? "bg-amber-400" : "bg-red-400"
+                                    score >= 80 ? "bg-emerald-500" : score >= 60 ? "bg-amber-500" : "bg-red-500"
                                 )}
                                 style={{ width: `${score}%` }}
                             />
                         </div>
                         <p className="text-xs text-muted-foreground mt-1">{criticalAlerts.length} critici, {warningAlerts.length} avvisi attivi</p>
                     </Link>
+                </div>
+
+                {/* AI Optimization Suggestions */}
+                <div className="glass rounded-xl overflow-hidden border border-teal-200">
+                    <div className="flex items-center justify-between p-5 border-b border-teal-200 bg-teal-50/50">
+                        <div className="flex items-center gap-3">
+                            <Cpu className="w-5 h-5 text-teal-600" />
+                            <div>
+                                <h3 className="text-sm font-semibold text-foreground">Suggerimenti AI</h3>
+                                <p className="text-xs text-muted-foreground">{demoOptimizationSuggestions.length} ottimizzazioni disponibili — Risparmio stimato: {formatCurrency(demoOptimizationSuggestions.reduce((sum, s) => sum + s.estimatedSavings, 0))}/mese</p>
+                            </div>
+                        </div>
+                        <Link href="/ottimizzazione" className="text-xs text-primary hover:underline flex items-center gap-1">
+                            Ottimizza <ChevronRight className="w-3 h-3" />
+                        </Link>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-border/30">
+                        {demoOptimizationSuggestions.slice(0, 3).map((suggestion) => (
+                            <div key={suggestion.id} className="p-4">
+                                <div className="flex items-center gap-2 mb-2">
+                                    <span className={cn(
+                                        "inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold uppercase",
+                                        suggestion.priority === "HIGH" ? "bg-amber-50 text-amber-600" :
+                                            suggestion.priority === "MEDIUM" ? "bg-sky-50 text-sky-600" :
+                                                "bg-zinc-50 text-zinc-600"
+                                    )}>{suggestion.type}</span>
+                                </div>
+                                <p className="text-sm font-medium text-foreground mb-1">{suggestion.title}</p>
+                                <p className="text-xs text-muted-foreground line-clamp-2">{suggestion.description}</p>
+                                <p className="text-xs font-semibold text-emerald-600 mt-2">Risparmio: {formatCurrency(suggestion.estimatedSavings)}/mese</p>
+                            </div>
+                        ))}
+                    </div>
                 </div>
 
                 {/* Main content grid */}
@@ -258,11 +293,11 @@ export default function DashboardPage() {
                                             </td>
                                             <td className="px-3 py-3.5 text-center">
                                                 {trip.complianceCheck.overallStatus === "OK" ? (
-                                                    <CheckCircle2 className="w-4 h-4 text-emerald-400 mx-auto" />
+                                                    <CheckCircle2 className="w-4 h-4 text-emerald-600 mx-auto" />
                                                 ) : trip.complianceCheck.overallStatus === "WARNING" ? (
-                                                    <AlertTriangle className="w-4 h-4 text-amber-400 mx-auto" />
+                                                    <AlertTriangle className="w-4 h-4 text-amber-600 mx-auto" />
                                                 ) : (
-                                                    <AlertTriangle className="w-4 h-4 text-red-400 mx-auto" />
+                                                    <AlertTriangle className="w-4 h-4 text-red-600 mx-auto" />
                                                 )}
                                             </td>
                                             <td className="px-5 py-3.5 text-right hidden lg:table-cell">
@@ -300,7 +335,7 @@ export default function DashboardPage() {
                                             </div>
                                             <div className={cn(
                                                 "w-2 h-2 rounded-full",
-                                                driver.isAvailable ? "bg-emerald-400" : "bg-amber-400"
+                                                driver.isAvailable ? "bg-emerald-500" : "bg-amber-500"
                                             )} />
                                         </div>
                                         <div className="space-y-1">
@@ -308,16 +343,16 @@ export default function DashboardPage() {
                                                 <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> Ore guida oggi</span>
                                                 <span className={cn(
                                                     "font-semibold",
-                                                    status === "critical" ? "text-red-400" :
-                                                        status === "warning" ? "text-amber-400" : "text-emerald-400"
+                                                    status === "critical" ? "text-red-600" :
+                                                        status === "warning" ? "text-amber-600" : "text-emerald-600"
                                                 )}>{formatHours(driver.dailyHoursUsed)} / 9h</span>
                                             </div>
                                             <div className="h-1 bg-secondary rounded-full overflow-hidden">
                                                 <div
                                                     className={cn(
                                                         "h-full rounded-full transition-all",
-                                                        status === "critical" ? "bg-red-400" :
-                                                            status === "warning" ? "bg-amber-400" : "bg-emerald-400"
+                                                        status === "critical" ? "bg-red-500" :
+                                                            status === "warning" ? "bg-amber-500" : "bg-emerald-500"
                                                     )}
                                                     style={{ width: `${Math.min((driver.dailyHoursUsed / 9) * 100, 100)}%` }}
                                                 />
@@ -332,11 +367,11 @@ export default function DashboardPage() {
 
                 {/* Critical Alerts */}
                 {criticalAlerts.length > 0 && (
-                    <div className="glass rounded-xl overflow-hidden border border-red-500/15">
-                        <div className="flex items-center justify-between p-5 border-b border-red-500/15 bg-red-500/5">
+                    <div className="glass rounded-xl overflow-hidden border border-red-200">
+                        <div className="flex items-center justify-between p-5 border-b border-red-200 bg-red-50">
                             <div className="flex items-center gap-3">
-                                <AlertTriangle className="w-5 h-5 text-red-400" />
-                                <h3 className="text-sm font-semibold text-red-400">Alert Critici — Azione Richiesta</h3>
+                                <AlertTriangle className="w-5 h-5 text-red-600" />
+                                <h3 className="text-sm font-semibold text-red-600">Alert Critici — Azione Richiesta</h3>
                             </div>
                             <Link href="/compliance" className="text-xs text-primary hover:underline flex items-center gap-1">
                                 Compliance Center <ChevronRight className="w-3 h-3" />
@@ -345,7 +380,7 @@ export default function DashboardPage() {
                         <div className="divide-y divide-border/20">
                             {criticalAlerts.map((alert) => (
                                 <div key={alert.id} className="flex items-start gap-4 p-4">
-                                    <div className="w-2 h-2 rounded-full bg-red-400 mt-1.5 flex-shrink-0 animate-pulse" />
+                                    <div className="w-2 h-2 rounded-full bg-red-500 mt-1.5 flex-shrink-0 animate-pulse" />
                                     <div className="flex-1">
                                         <p className="text-sm font-semibold text-foreground">{alert.title}</p>
                                         <p className="text-xs text-muted-foreground mt-0.5">{alert.message}</p>

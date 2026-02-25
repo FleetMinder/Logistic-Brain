@@ -106,7 +106,7 @@ export default function VeicoliPage() {
                                         </div>
                                     </div>
                                     <div className="flex flex-col items-end gap-1.5">
-                                        {hasAlerts && <AlertTriangle className="w-4 h-4 text-amber-400" />}
+                                        {hasAlerts && <AlertTriangle className="w-4 h-4 text-amber-600" />}
                                         <span className={cn("px-2 py-0.5 rounded text-xs font-medium border", getVehicleTypeColor(vehicle.type))}>
                                             {getVehicleTypeLabel(vehicle.type)}
                                         </span>
@@ -142,10 +142,10 @@ export default function VeicoliPage() {
                                     <span className={cn(
                                         "flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium border",
                                         vehicle.isAvailable
-                                            ? "bg-emerald-500/15 text-emerald-400 border-emerald-500/25"
-                                            : "bg-amber-500/15 text-amber-400 border-amber-500/25"
+                                            ? "bg-emerald-50 text-emerald-600 border-emerald-200"
+                                            : "bg-amber-50 text-amber-600 border-amber-200"
                                     )}>
-                                        <div className={cn("w-1.5 h-1.5 rounded-full", vehicle.isAvailable ? "bg-emerald-400" : "bg-amber-400")} />
+                                        <div className={cn("w-1.5 h-1.5 rounded-full", vehicle.isAvailable ? "bg-emerald-500" : "bg-amber-500")} />
                                         {vehicle.isAvailable ? "Disponibile" : "In Servizio"}
                                     </span>
                                     <span className={cn("px-2 py-0.5 rounded text-[10px] font-medium border", getTachographTypeColor(vehicle.tachographType))}>
@@ -162,7 +162,7 @@ export default function VeicoliPage() {
                                         </span>
                                         <span className={cn(
                                             "text-xs font-medium flex items-center gap-1",
-                                            revisionExpired ? "text-red-400" : revisionExpiring ? "text-amber-400" : "text-emerald-400"
+                                            revisionExpired ? "text-red-600" : revisionExpiring ? "text-amber-600" : "text-emerald-600"
                                         )}>
                                             {revisionExpired ? <AlertTriangle className="w-3 h-3" /> : revisionExpiring ? <AlertTriangle className="w-3 h-3" /> : <CheckCircle2 className="w-3 h-3" />}
                                             {revisionExpired ? "Scaduta" : ""} {formatDate(vehicle.revisionDeadline)}
@@ -175,7 +175,7 @@ export default function VeicoliPage() {
                                         </span>
                                         <span className={cn(
                                             "text-xs font-medium flex items-center gap-1",
-                                            insuranceExpiring ? "text-amber-400" : "text-emerald-400"
+                                            insuranceExpiring ? "text-amber-600" : "text-emerald-600"
                                         )}>
                                             {insuranceExpiring ? <AlertTriangle className="w-3 h-3" /> : <CheckCircle2 className="w-3 h-3" />}
                                             {formatDate(vehicle.insuranceDeadline)}

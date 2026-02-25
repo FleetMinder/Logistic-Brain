@@ -20,8 +20,8 @@ export default function ImpostazioniPage() {
                 {/* Company */}
                 <div className="glass rounded-xl p-6">
                     <div className="flex items-center gap-3 mb-5">
-                        <div className="w-8 h-8 rounded-lg bg-teal-500/15 flex items-center justify-center">
-                            <Building2 className="w-4 h-4 text-teal-400" />
+                        <div className="w-8 h-8 rounded-lg bg-teal-50 flex items-center justify-center">
+                            <Building2 className="w-4 h-4 text-teal-600" />
                         </div>
                         <h3 className="text-sm font-semibold text-foreground">Dati Azienda</h3>
                     </div>
@@ -53,8 +53,8 @@ export default function ImpostazioniPage() {
                 {/* Database */}
                 <div className="glass rounded-xl p-6">
                     <div className="flex items-center gap-3 mb-5">
-                        <div className="w-8 h-8 rounded-lg bg-emerald-500/15 flex items-center justify-center">
-                            <Database className="w-4 h-4 text-emerald-400" />
+                        <div className="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center">
+                            <Database className="w-4 h-4 text-emerald-600" />
                         </div>
                         <div>
                             <h3 className="text-sm font-semibold text-foreground">Database — Neon DB</h3>
@@ -71,9 +71,9 @@ export default function ImpostazioniPage() {
                             />
                             <p className="text-xs text-muted-foreground mt-1">Configura in <code className="bg-secondary px-1 rounded">.env.local</code> per sicurezza</p>
                         </div>
-                        <div className="flex items-center gap-3 p-3 bg-emerald-500/8 border border-emerald-500/15 rounded-lg">
-                            <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                            <p className="text-xs text-emerald-400">Modalita Demo — Dati locali attivi</p>
+                        <div className="flex items-center gap-3 p-3 bg-emerald-50 border border-emerald-200 rounded-lg">
+                            <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                            <p className="text-xs text-emerald-600">Modalita Demo — Dati locali attivi</p>
                         </div>
                     </div>
                 </div>
@@ -81,8 +81,8 @@ export default function ImpostazioniPage() {
                 {/* API Keys */}
                 <div className="glass rounded-xl p-6">
                     <div className="flex items-center gap-3 mb-5">
-                        <div className="w-8 h-8 rounded-lg bg-indigo-500/15 flex items-center justify-center">
-                            <Key className="w-4 h-4 text-indigo-400" />
+                        <div className="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center">
+                            <Key className="w-4 h-4 text-indigo-600" />
                         </div>
                         <h3 className="text-sm font-semibold text-foreground">API Keys</h3>
                     </div>
@@ -108,8 +108,8 @@ export default function ImpostazioniPage() {
                 {/* Notifications */}
                 <div className="glass rounded-xl p-6">
                     <div className="flex items-center gap-3 mb-5">
-                        <div className="w-8 h-8 rounded-lg bg-amber-500/15 flex items-center justify-center">
-                            <Bell className="w-4 h-4 text-amber-400" />
+                        <div className="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center">
+                            <Bell className="w-4 h-4 text-amber-600" />
                         </div>
                         <h3 className="text-sm font-semibold text-foreground">Notifiche</h3>
                     </div>
@@ -134,8 +134,8 @@ export default function ImpostazioniPage() {
                 {/* GDPR */}
                 <div className="glass rounded-xl p-6">
                     <div className="flex items-center gap-3 mb-5">
-                        <div className="w-8 h-8 rounded-lg bg-red-500/15 flex items-center justify-center">
-                            <Shield className="w-4 h-4 text-red-400" />
+                        <div className="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center">
+                            <Shield className="w-4 h-4 text-red-600" />
                         </div>
                         <h3 className="text-sm font-semibold text-foreground">Privacy & GDPR</h3>
                     </div>
@@ -145,7 +145,7 @@ export default function ImpostazioniPage() {
                             <button className="px-4 py-2 rounded-lg bg-secondary border border-border text-sm font-medium text-foreground hover:bg-accent transition-colors">
                                 Esporta Dati
                             </button>
-                            <button className="px-4 py-2 rounded-lg bg-red-500/15 border border-red-500/25 text-sm font-medium text-red-400 hover:bg-red-500/25 transition-colors">
+                            <button className="px-4 py-2 rounded-lg bg-red-50 border border-red-500/25 text-sm font-medium text-red-600 hover:bg-red-500/25 transition-colors">
                                 Elimina Dati
                             </button>
                         </div>

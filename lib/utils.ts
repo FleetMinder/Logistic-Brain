@@ -120,15 +120,15 @@ export function getTachographDownloadStatus(lastDownload: Date | string | null |
 // --- Compliance: overall score ---
 
 export function getComplianceColor(score: number): string {
-    if (score >= 80) return "text-emerald-400"
-    if (score >= 60) return "text-amber-400"
-    return "text-red-400"
+    if (score >= 80) return "text-emerald-600"
+    if (score >= 60) return "text-amber-600"
+    return "text-red-600"
 }
 
 export function getComplianceBgColor(score: number): string {
-    if (score >= 80) return "bg-emerald-500/15 border-emerald-500/25"
-    if (score >= 60) return "bg-amber-500/15 border-amber-500/25"
-    return "bg-red-500/15 border-red-500/25"
+    if (score >= 80) return "bg-emerald-50 border-emerald-200"
+    if (score >= 60) return "bg-amber-50 border-amber-200"
+    return "bg-red-50 border-red-200"
 }
 
 export function getComplianceLabel(score: number): string {
@@ -143,12 +143,12 @@ export function getComplianceLabel(score: number): string {
 
 export function getTripStatusColor(status: string): string {
     const colors: Record<string, string> = {
-        PLANNED: "bg-sky-500/15 text-sky-400 border-sky-500/25",
-        IN_PROGRESS: "bg-amber-500/15 text-amber-400 border-amber-500/25",
-        COMPLETED: "bg-emerald-500/15 text-emerald-400 border-emerald-500/25",
-        CANCELLED: "bg-red-500/15 text-red-400 border-red-500/25",
+        PLANNED: "bg-sky-50 text-sky-600 border-sky-200",
+        IN_PROGRESS: "bg-amber-50 text-amber-600 border-amber-200",
+        COMPLETED: "bg-emerald-50 text-emerald-600 border-emerald-200",
+        CANCELLED: "bg-red-50 text-red-600 border-red-200",
     }
-    return colors[status] || "bg-zinc-500/15 text-zinc-400 border-zinc-500/25"
+    return colors[status] || "bg-zinc-50 text-zinc-600 border-zinc-200"
 }
 
 export function getTripStatusLabel(status: string): string {
@@ -173,12 +173,12 @@ export function getVehicleTypeLabel(type: string): string {
 
 export function getVehicleTypeColor(type: string): string {
     const colors: Record<string, string> = {
-        STANDARD: "bg-zinc-500/15 text-zinc-400 border-zinc-500/25",
-        ADR: "bg-orange-500/15 text-orange-400 border-orange-500/25",
-        FRIGO: "bg-sky-500/15 text-sky-400 border-sky-500/25",
-        ECCEZIONALE: "bg-indigo-500/15 text-indigo-400 border-indigo-500/25",
+        STANDARD: "bg-zinc-50 text-zinc-600 border-zinc-200",
+        ADR: "bg-orange-50 text-orange-600 border-orange-200",
+        FRIGO: "bg-sky-50 text-sky-600 border-sky-200",
+        ECCEZIONALE: "bg-indigo-50 text-indigo-600 border-indigo-200",
     }
-    return colors[type] || "bg-zinc-500/15 text-zinc-400 border-zinc-500/25"
+    return colors[type] || "bg-zinc-50 text-zinc-600 border-zinc-200"
 }
 
 export function getDocumentTypeLabel(type: string): string {
@@ -198,12 +198,12 @@ export function getDocumentTypeLabel(type: string): string {
 
 export function getDocumentStatusColor(status: string): string {
     const colors: Record<string, string> = {
-        VALID: "bg-emerald-500/15 text-emerald-400 border-emerald-500/25",
-        EXPIRING_SOON: "bg-amber-500/15 text-amber-400 border-amber-500/25",
-        EXPIRED: "bg-red-500/15 text-red-400 border-red-500/25",
-        MISSING: "bg-zinc-500/15 text-zinc-400 border-zinc-500/25",
+        VALID: "bg-emerald-50 text-emerald-600 border-emerald-200",
+        EXPIRING_SOON: "bg-amber-50 text-amber-600 border-amber-200",
+        EXPIRED: "bg-red-50 text-red-600 border-red-200",
+        MISSING: "bg-zinc-50 text-zinc-600 border-zinc-200",
     }
-    return colors[status] || "bg-zinc-500/15 text-zinc-400 border-zinc-500/25"
+    return colors[status] || "bg-zinc-50 text-zinc-600 border-zinc-200"
 }
 
 export function getStopTypeLabel(type: string): string {
@@ -218,11 +218,11 @@ export function getStopTypeLabel(type: string): string {
 
 export function getAlertSeverityColor(severity: string): string {
     const colors: Record<string, string> = {
-        CRITICAL: "bg-red-500/15 text-red-400 border-red-500/25",
-        WARNING: "bg-amber-500/15 text-amber-400 border-amber-500/25",
-        INFO: "bg-sky-500/15 text-sky-400 border-sky-500/25",
+        CRITICAL: "bg-red-50 text-red-600 border-red-200",
+        WARNING: "bg-amber-50 text-amber-600 border-amber-200",
+        INFO: "bg-sky-50 text-sky-600 border-sky-200",
     }
-    return colors[severity] || "bg-zinc-500/15 text-zinc-400 border-zinc-500/25"
+    return colors[severity] || "bg-zinc-50 text-zinc-600 border-zinc-200"
 }
 
 export function getTachographTypeLabel(type: string): string {
@@ -237,10 +237,10 @@ export function getTachographTypeLabel(type: string): string {
 
 export function getTachographTypeColor(type: string): string {
     const colors: Record<string, string> = {
-        ANALOG: "bg-red-500/15 text-red-400 border-red-500/25",
-        DIGITAL_V1: "bg-amber-500/15 text-amber-400 border-amber-500/25",
-        DIGITAL_V2: "bg-sky-500/15 text-sky-400 border-sky-500/25",
-        SMART_V2: "bg-emerald-500/15 text-emerald-400 border-emerald-500/25",
+        ANALOG: "bg-red-50 text-red-600 border-red-200",
+        DIGITAL_V1: "bg-amber-50 text-amber-600 border-amber-200",
+        DIGITAL_V2: "bg-sky-50 text-sky-600 border-sky-200",
+        SMART_V2: "bg-emerald-50 text-emerald-600 border-emerald-200",
     }
-    return colors[type] || "bg-zinc-500/15 text-zinc-400 border-zinc-500/25"
+    return colors[type] || "bg-zinc-50 text-zinc-600 border-zinc-200"
 }

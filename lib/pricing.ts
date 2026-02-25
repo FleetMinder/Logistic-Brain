@@ -1,0 +1,47 @@
+export const pricingTiers = [
+    {
+        name: "Starter",
+        price: 29,
+        period: "mese",
+        description: "Per piccole flotte fino a 5 veicoli",
+        features: [
+            "Fino a 5 veicoli",
+            "Fino a 10 autisti",
+            "Dashboard operativa",
+            "Gestione documenti",
+            "Alert scadenze",
+        ],
+        priceId: process.env.STRIPE_PRICE_STARTER || "price_starter_monthly",
+    },
+    {
+        name: "Professional",
+        price: 79,
+        period: "mese",
+        description: "Per flotte in crescita fino a 20 veicoli",
+        features: [
+            "Fino a 20 veicoli",
+            "Autisti illimitati",
+            "Ottimizzazione AI",
+            "Compliance avanzata",
+            "Report personalizzati",
+            "Supporto prioritario",
+        ],
+        priceId: process.env.STRIPE_PRICE_PRO || "price_pro_monthly",
+        popular: true,
+    },
+    {
+        name: "Enterprise",
+        price: 149,
+        period: "mese",
+        description: "Per flotte fino a 50 veicoli",
+        features: [
+            "Fino a 50 veicoli",
+            "Tutto del Professional",
+            "API personalizzate",
+            "Integrazioni ERP",
+            "Account manager dedicato",
+            "SLA garantito",
+        ],
+        priceId: process.env.STRIPE_PRICE_ENTERPRISE || "price_enterprise_monthly",
+    },
+] as const

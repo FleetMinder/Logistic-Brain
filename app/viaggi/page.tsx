@@ -113,7 +113,7 @@ export default function ViaggiPage() {
                                             </span>
                                         )}
                                         {trip.isInternational && (
-                                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-indigo-500/15 text-indigo-400 border border-indigo-500/25">
+                                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-indigo-500/15 text-indigo-600 border border-indigo-500/25">
                                                 <Globe className="w-3 h-3" />
                                                 Internazionale
                                             </span>

@@ -94,8 +94,8 @@ export default function CompliancePage() {
                                     <div
                                         className={cn(
                                             "h-full rounded-full transition-all",
-                                            item.score >= 80 ? "bg-emerald-400" :
-                                                item.score >= 60 ? "bg-amber-400" : "bg-red-400"
+                                            item.score >= 80 ? "bg-emerald-500" :
+                                                item.score >= 60 ? "bg-amber-500" : "bg-red-500"
                                         )}
                                         style={{ width: `${item.score}%` }}
                                     />
@@ -108,19 +108,19 @@ export default function CompliancePage() {
 
                 {/* Critical & Warning Alerts */}
                 {criticalAlerts.length > 0 && (
-                    <div className="glass rounded-xl p-6 border-red-500/20">
+                    <div className="glass rounded-xl p-6 border-red-200">
                         <div className="flex items-center gap-3 mb-4">
-                            <div className="w-8 h-8 rounded-lg bg-red-500/15 flex items-center justify-center">
-                                <AlertTriangle className="w-4 h-4 text-red-400" />
+                            <div className="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center">
+                                <AlertTriangle className="w-4 h-4 text-red-600" />
                             </div>
                             <div>
-                                <h3 className="text-sm font-semibold text-red-400">{criticalAlerts.length} Alert Critici — Azione Immediata</h3>
+                                <h3 className="text-sm font-semibold text-red-600">{criticalAlerts.length} Alert Critici — Azione Immediata</h3>
                                 <p className="text-xs text-muted-foreground">Problemi che bloccano o possono bloccare le operazioni</p>
                             </div>
                         </div>
                         <div className="space-y-2">
                             {criticalAlerts.map(alert => (
-                                <div key={alert.id} className="p-3 rounded-lg bg-red-500/8 border border-red-500/15">
+                                <div key={alert.id} className="p-3 rounded-lg bg-red-50 border border-red-200">
                                     <p className="text-sm font-medium text-foreground">{alert.title}</p>
                                     <p className="text-xs text-muted-foreground mt-1">{alert.message}</p>
                                 </div>
@@ -132,17 +132,17 @@ export default function CompliancePage() {
                 {warningAlerts.length > 0 && (
                     <div className="glass rounded-xl p-6">
                         <div className="flex items-center gap-3 mb-4">
-                            <div className="w-8 h-8 rounded-lg bg-amber-500/15 flex items-center justify-center">
-                                <Clock className="w-4 h-4 text-amber-400" />
+                            <div className="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center">
+                                <Clock className="w-4 h-4 text-amber-600" />
                             </div>
                             <div>
-                                <h3 className="text-sm font-semibold text-amber-400">{warningAlerts.length} Avvisi — Attenzione Richiesta</h3>
+                                <h3 className="text-sm font-semibold text-amber-600">{warningAlerts.length} Avvisi — Attenzione Richiesta</h3>
                                 <p className="text-xs text-muted-foreground">Scadenze imminenti e limiti in avvicinamento</p>
                             </div>
                         </div>
                         <div className="space-y-2">
                             {warningAlerts.map(alert => (
-                                <div key={alert.id} className="p-3 rounded-lg bg-amber-500/8 border border-amber-500/15">
+                                <div key={alert.id} className="p-3 rounded-lg bg-amber-50 border border-amber-200">
                                     <p className="text-sm font-medium text-foreground">{alert.title}</p>
                                     <p className="text-xs text-muted-foreground mt-1">{alert.message}</p>
                                 </div>
@@ -155,8 +155,8 @@ export default function CompliancePage() {
                     {/* CE 561/2006 — Driving Hours Monitor */}
                     <div className="glass rounded-xl p-6">
                         <div className="flex items-center gap-3 mb-5">
-                            <div className="w-8 h-8 rounded-lg bg-teal-500/15 flex items-center justify-center">
-                                <Activity className="w-4 h-4 text-teal-400" />
+                            <div className="w-8 h-8 rounded-lg bg-teal-50 flex items-center justify-center">
+                                <Activity className="w-4 h-4 text-teal-600" />
                             </div>
                             <div>
                                 <h3 className="text-sm font-semibold text-foreground">Tempi di Guida — CE 561/2006</h3>
@@ -176,8 +176,8 @@ export default function CompliancePage() {
                                 return (
                                     <div key={driver.id} className={cn(
                                         "p-4 rounded-lg border transition-colors",
-                                        hasCritical ? "bg-red-500/5 border-red-500/15" :
-                                            hasWarning ? "bg-amber-500/5 border-amber-500/15" :
+                                        hasCritical ? "bg-red-50 border-red-200" :
+                                            hasWarning ? "bg-amber-50 border-amber-200" :
                                                 "bg-secondary/30 border-border/50"
                                     )}>
                                         <div className="flex items-center justify-between mb-3">
@@ -190,9 +190,9 @@ export default function CompliancePage() {
                                                     <p className="text-[11px] text-muted-foreground">{driver.isAvailable ? "Disponibile" : "In servizio"}</p>
                                                 </div>
                                             </div>
-                                            {hasCritical && <AlertTriangle className="w-4 h-4 text-red-400" />}
-                                            {!hasCritical && hasWarning && <AlertTriangle className="w-4 h-4 text-amber-400" />}
-                                            {!hasCritical && !hasWarning && <CheckCircle2 className="w-4 h-4 text-emerald-400" />}
+                                            {hasCritical && <AlertTriangle className="w-4 h-4 text-red-600" />}
+                                            {!hasCritical && hasWarning && <AlertTriangle className="w-4 h-4 text-amber-600" />}
+                                            {!hasCritical && !hasWarning && <CheckCircle2 className="w-4 h-4 text-emerald-600" />}
                                         </div>
 
                                         {/* Hours bars */}
@@ -207,8 +207,8 @@ export default function CompliancePage() {
                                                         <span className="text-muted-foreground">{bar.label}</span>
                                                         <span className={cn(
                                                             "font-semibold",
-                                                            bar.status === "critical" ? "text-red-400" :
-                                                                bar.status === "warning" ? "text-amber-400" : "text-emerald-400"
+                                                            bar.status === "critical" ? "text-red-600" :
+                                                                bar.status === "warning" ? "text-amber-600" : "text-emerald-600"
                                                         )}>
                                                             {formatHours(bar.used)}/{bar.max}h
                                                         </span>
@@ -217,8 +217,8 @@ export default function CompliancePage() {
                                                         <div
                                                             className={cn(
                                                                 "h-full rounded-full",
-                                                                bar.status === "critical" ? "bg-red-400" :
-                                                                    bar.status === "warning" ? "bg-amber-400" : "bg-emerald-400"
+                                                                bar.status === "critical" ? "bg-red-500" :
+                                                                    bar.status === "warning" ? "bg-amber-500" : "bg-emerald-500"
                                                             )}
                                                             style={{ width: `${Math.min((bar.used / bar.max) * 100, 100)}%` }}
                                                         />
@@ -231,7 +231,7 @@ export default function CompliancePage() {
                                         {tachStatus !== "ok" && (
                                             <div className={cn(
                                                 "mt-2 flex items-center gap-1.5 text-[11px]",
-                                                tachStatus === "overdue" ? "text-red-400" : "text-amber-400"
+                                                tachStatus === "overdue" ? "text-red-600" : "text-amber-600"
                                             )}>
                                                 <AlertTriangle className="w-3 h-3" />
                                                 Scarico tachigrafo: {tachStatus === "overdue" ? "SCADUTO" : "in scadenza"} (ultimo: {formatDate(driver.lastTachographDownload)})
@@ -249,8 +249,8 @@ export default function CompliancePage() {
                         <div className="glass rounded-xl p-6">
                             <div className="flex items-center justify-between mb-5">
                                 <div className="flex items-center gap-3">
-                                    <div className="w-8 h-8 rounded-lg bg-amber-500/15 flex items-center justify-center">
-                                        <FileText className="w-4 h-4 text-amber-400" />
+                                    <div className="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center">
+                                        <FileText className="w-4 h-4 text-amber-600" />
                                     </div>
                                     <div>
                                         <h3 className="text-sm font-semibold text-foreground">Scadenze Documenti</h3>
@@ -264,8 +264,8 @@ export default function CompliancePage() {
                             <div className="space-y-2">
                                 {expiringDocs.length === 0 ? (
                                     <div className="text-center py-6">
-                                        <CheckCircle2 className="w-8 h-8 text-emerald-400 mx-auto mb-2" />
-                                        <p className="text-sm text-emerald-400">Nessuna scadenza imminente</p>
+                                        <CheckCircle2 className="w-8 h-8 text-emerald-600 mx-auto mb-2" />
+                                        <p className="text-sm text-emerald-600">Nessuna scadenza imminente</p>
                                     </div>
                                 ) : (
                                     expiringDocs.map(doc => {
@@ -274,7 +274,7 @@ export default function CompliancePage() {
                                         return (
                                             <div key={doc.id} className={cn(
                                                 "p-3 rounded-lg border flex items-center justify-between",
-                                                isUrgent ? "bg-red-500/8 border-red-500/15" : "bg-amber-500/8 border-amber-500/15"
+                                                isUrgent ? "bg-red-50 border-red-200" : "bg-amber-50 border-amber-200"
                                             )}>
                                                 <div>
                                                     <p className="text-sm font-medium text-foreground">{doc.fileName}</p>
@@ -289,7 +289,7 @@ export default function CompliancePage() {
                                                 <div className="text-right">
                                                     <p className={cn(
                                                         "text-xs font-semibold",
-                                                        isUrgent ? "text-red-400" : "text-amber-400"
+                                                        isUrgent ? "text-red-600" : "text-amber-600"
                                                     )}>
                                                         {getExpiryUrgencyLabel(doc.expirationDate)}
                                                     </p>
@@ -305,8 +305,8 @@ export default function CompliancePage() {
                         {/* Tachograph V2 Retrofit Status */}
                         <div className="glass rounded-xl p-6">
                             <div className="flex items-center gap-3 mb-5">
-                                <div className="w-8 h-8 rounded-lg bg-indigo-500/15 flex items-center justify-center">
-                                    <Info className="w-4 h-4 text-indigo-400" />
+                                <div className="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center">
+                                    <Info className="w-4 h-4 text-indigo-600" />
                                 </div>
                                 <div>
                                     <h3 className="text-sm font-semibold text-foreground">Tachigrafo Smart V2</h3>
@@ -319,7 +319,7 @@ export default function CompliancePage() {
                                         "p-3 rounded-lg border flex items-center justify-between",
                                         vehicle.tachographType === "SMART_V2" || vehicle.tachographType === "DIGITAL_V2"
                                             ? "bg-secondary/30 border-border/50"
-                                            : "bg-amber-500/8 border-amber-500/15"
+                                            : "bg-amber-50 border-amber-200"
                                     )}>
                                         <div className="flex items-center gap-3">
                                             <Truck className="w-4 h-4 text-muted-foreground" />
@@ -338,8 +338,8 @@ export default function CompliancePage() {
                                 ))}
                             </div>
                             {vehiclesNeedingRetrofit.length > 0 && (
-                                <div className="mt-4 p-3 bg-amber-500/8 border border-amber-500/15 rounded-lg">
-                                    <p className="text-xs text-amber-400">
+                                <div className="mt-4 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                                    <p className="text-xs text-amber-600">
                                         <strong>{vehiclesNeedingRetrofit.length} veicoli</strong> necessitano del retrofit al Smart Tachograph V2.
                                         Scadenza obbligo: <strong>1 luglio 2026</strong> ({daysUntilExpiry(new Date("2026-07-01"))} giorni).
                                     </p>
@@ -350,8 +350,8 @@ export default function CompliancePage() {
                         {/* CE 561/2006 Quick Reference */}
                         <div className="glass rounded-xl p-6">
                             <div className="flex items-center gap-3 mb-5">
-                                <div className="w-8 h-8 rounded-lg bg-teal-500/15 flex items-center justify-center">
-                                    <Info className="w-4 h-4 text-teal-400" />
+                                <div className="w-8 h-8 rounded-lg bg-teal-50 flex items-center justify-center">
+                                    <Info className="w-4 h-4 text-teal-600" />
                                 </div>
                                 <div>
                                     <h3 className="text-sm font-semibold text-foreground">Reg. CE 561/2006</h3>

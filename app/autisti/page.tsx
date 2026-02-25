@@ -87,14 +87,14 @@ export default function AutoristiPage() {
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-1.5">
-                                        {hasAlerts && <AlertTriangle className="w-4 h-4 text-amber-400" />}
+                                        {hasAlerts && <AlertTriangle className="w-4 h-4 text-amber-600" />}
                                         <div className={cn(
                                             "flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium border",
                                             driver.isAvailable
-                                                ? "bg-emerald-500/15 text-emerald-400 border-emerald-500/25"
-                                                : "bg-amber-500/15 text-amber-400 border-amber-500/25"
+                                                ? "bg-emerald-50 text-emerald-600 border-emerald-200"
+                                                : "bg-amber-50 text-amber-600 border-amber-200"
                                         )}>
-                                            <div className={cn("w-1.5 h-1.5 rounded-full", driver.isAvailable ? "bg-emerald-400" : "bg-amber-400")} />
+                                            <div className={cn("w-1.5 h-1.5 rounded-full", driver.isAvailable ? "bg-emerald-500" : "bg-amber-500")} />
                                             {driver.isAvailable ? "Disponibile" : "In Servizio"}
                                         </div>
                                     </div>
@@ -125,8 +125,8 @@ export default function AutoristiPage() {
                                         </span>
                                         <span className={cn(
                                             "font-semibold",
-                                            drivingStatus === "critical" ? "text-red-400" :
-                                                drivingStatus === "warning" ? "text-amber-400" : "text-emerald-400"
+                                            drivingStatus === "critical" ? "text-red-600" :
+                                                drivingStatus === "warning" ? "text-amber-600" : "text-emerald-600"
                                         )}>
                                             {formatHours(driver.dailyHoursUsed)} / 9h
                                         </span>
@@ -135,25 +135,25 @@ export default function AutoristiPage() {
                                         <div
                                             className={cn(
                                                 "h-full rounded-full transition-all",
-                                                drivingStatus === "critical" ? "bg-red-400" :
-                                                    drivingStatus === "warning" ? "bg-amber-400" : "bg-emerald-400"
+                                                drivingStatus === "critical" ? "bg-red-500" :
+                                                    drivingStatus === "warning" ? "bg-amber-500" : "bg-emerald-500"
                                             )}
                                             style={{ width: `${Math.min((driver.dailyHoursUsed / 9) * 100, 100)}%` }}
                                         />
                                     </div>
                                     <div className="flex items-center justify-between text-xs mt-1.5">
                                         <span className="text-muted-foreground">Settimana</span>
-                                        <span className={cn("font-medium", getDrivingHoursStatus(driver.weeklyHoursUsed, 56) === "critical" ? "text-red-400" : getDrivingHoursStatus(driver.weeklyHoursUsed, 56) === "warning" ? "text-amber-400" : "text-muted-foreground")}>{formatHours(driver.weeklyHoursUsed)} / 56h</span>
+                                        <span className={cn("font-medium", getDrivingHoursStatus(driver.weeklyHoursUsed, 56) === "critical" ? "text-red-600" : getDrivingHoursStatus(driver.weeklyHoursUsed, 56) === "warning" ? "text-amber-600" : "text-muted-foreground")}>{formatHours(driver.weeklyHoursUsed)} / 56h</span>
                                     </div>
                                     <div className="flex items-center justify-between text-xs mt-0.5">
                                         <span className="text-muted-foreground">Bisettimanale</span>
-                                        <span className={cn("font-medium", getDrivingHoursStatus(driver.biweeklyHoursUsed, 90) === "critical" ? "text-red-400" : getDrivingHoursStatus(driver.biweeklyHoursUsed, 90) === "warning" ? "text-amber-400" : "text-muted-foreground")}>{formatHours(driver.biweeklyHoursUsed)} / 90h</span>
+                                        <span className={cn("font-medium", getDrivingHoursStatus(driver.biweeklyHoursUsed, 90) === "critical" ? "text-red-600" : getDrivingHoursStatus(driver.biweeklyHoursUsed, 90) === "warning" ? "text-amber-600" : "text-muted-foreground")}>{formatHours(driver.biweeklyHoursUsed)} / 90h</span>
                                     </div>
                                     {(() => {
                                         const tachStatus = getTachographDownloadStatus(driver.lastTachographDownload)
                                         if (tachStatus === "ok") return null
                                         return (
-                                            <div className={cn("flex items-center gap-1 text-[11px] mt-2", tachStatus === "overdue" ? "text-red-400" : "text-amber-400")}>
+                                            <div className={cn("flex items-center gap-1 text-[11px] mt-2", tachStatus === "overdue" ? "text-red-600" : "text-amber-600")}>
                                                 <AlertTriangle className="w-3 h-3" />
                                                 Scarico tachigrafo {tachStatus === "overdue" ? "SCADUTO" : "in scadenza"} (ultimo: {formatDate(driver.lastTachographDownload)})
                                             </div>
@@ -170,7 +170,7 @@ export default function AutoristiPage() {
                                         </span>
                                         <span className={cn(
                                             "text-xs font-medium flex items-center gap-1",
-                                            licenseExpired ? "text-red-400" : licenseExpiring ? "text-amber-400" : "text-emerald-400"
+                                            licenseExpired ? "text-red-600" : licenseExpiring ? "text-amber-600" : "text-emerald-600"
                                         )}>
                                             {licenseExpired ? <AlertTriangle className="w-3 h-3" /> : licenseExpiring ? <AlertTriangle className="w-3 h-3" /> : <CheckCircle2 className="w-3 h-3" />}
                                             {licenseExpired ? "Scaduta" : ""} {formatDate(driver.licenseDeadline)}
@@ -184,7 +184,7 @@ export default function AutoristiPage() {
                                             </span>
                                             <span className={cn(
                                                 "text-xs font-medium flex items-center gap-1",
-                                                cqcExpired ? "text-red-400" : cqcExpiring ? "text-amber-400" : "text-emerald-400"
+                                                cqcExpired ? "text-red-600" : cqcExpiring ? "text-amber-600" : "text-emerald-600"
                                             )}>
                                                 {cqcExpired ? <AlertTriangle className="w-3 h-3" /> : cqcExpiring ? <AlertTriangle className="w-3 h-3" /> : <CheckCircle2 className="w-3 h-3" />}
                                                 {cqcExpired ? "Scaduta" : ""} {formatDate(driver.cqcDeadline)}
@@ -199,7 +199,7 @@ export default function AutoristiPage() {
                                             </span>
                                             <span className={cn(
                                                 "text-xs font-medium flex items-center gap-1",
-                                                adrExpiring ? "text-amber-400" : "text-emerald-400"
+                                                adrExpiring ? "text-amber-600" : "text-emerald-600"
                                             )}>
                                                 {adrExpiring ? <AlertTriangle className="w-3 h-3" /> : <CheckCircle2 className="w-3 h-3" />}
                                                 {formatDate(driver.adrDeadline)}

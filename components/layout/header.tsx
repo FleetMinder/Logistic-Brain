@@ -46,7 +46,7 @@ export function Header({ title }: { title?: string }) {
                     </button>
 
                     {showAlerts && (
-                        <div className="absolute right-0 top-11 w-80 bg-card border border-border rounded-xl shadow-2xl shadow-black/50 z-50 overflow-hidden animate-fade-in">
+                        <div className="absolute right-0 top-11 w-80 bg-card border border-border rounded-xl shadow-xl z-50 overflow-hidden animate-fade-in">
                             <div className="p-4 border-b border-border">
                                 <h3 className="text-sm font-semibold text-foreground">Notifiche</h3>
                                 <p className="text-xs text-muted-foreground">{unreadAlerts.length} non lette</p>
@@ -63,8 +63,8 @@ export function Header({ title }: { title?: string }) {
                                         <div className="flex items-start gap-3">
                                             <div className={cn(
                                                 "w-2 h-2 rounded-full mt-1.5 flex-shrink-0",
-                                                alert.severity === "CRITICAL" ? "bg-red-400" :
-                                                    alert.severity === "WARNING" ? "bg-amber-400" : "bg-sky-400"
+                                                alert.severity === "CRITICAL" ? "bg-red-500" :
+                                                    alert.severity === "WARNING" ? "bg-amber-500" : "bg-sky-500"
                                             )} />
                                             <div>
                                                 <p className="text-xs font-semibold text-foreground">{alert.title}</p>

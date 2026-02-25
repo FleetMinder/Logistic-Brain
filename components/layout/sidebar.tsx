@@ -22,12 +22,12 @@ import { demoStats, demoAlerts } from "@/lib/demo-data"
 
 const navItems = [
     { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-    { href: "/compliance", label: "Compliance", icon: Shield },
+    { href: "/ottimizzazione", label: "Ottimizzazione AI", icon: Cpu },
     { href: "/viaggi", label: "Viaggi", icon: Route },
-    { href: "/ai-dispatch", label: "AI Dispatch", icon: Cpu },
     { href: "/autisti", label: "Autisti", icon: Users },
-    { href: "/veicoli", label: "Veicoli", icon: Truck },
+    { href: "/veicoli", label: "Flotta", icon: Truck },
     { href: "/documenti", label: "Documenti", icon: FileText },
+    { href: "/compliance", label: "Compliance", icon: Shield },
 ]
 
 const bottomNavItems = [
@@ -98,8 +98,8 @@ export function Sidebar() {
                                 <span className={cn(
                                     "ml-auto text-[11px] font-bold px-1.5 py-0.5 rounded-full",
                                     criticalCount > 0
-                                        ? "bg-red-500/20 text-red-400"
-                                        : "bg-amber-500/20 text-amber-400"
+                                        ? "bg-red-50 text-red-600"
+                                        : "bg-amber-50 text-amber-600"
                                 )}>
                                     {totalUrgent}
                                 </span>
@@ -118,24 +118,24 @@ export function Sidebar() {
                     <div className={cn(
                         "p-3 rounded-lg border animate-fade-in transition-colors hover:bg-secondary/50",
                         demoStats.complianceScore >= 80
-                            ? "bg-emerald-500/8 border-emerald-500/15"
+                            ? "bg-emerald-50 border-emerald-200"
                             : demoStats.complianceScore >= 60
-                                ? "bg-amber-500/8 border-amber-500/15"
-                                : "bg-red-500/8 border-red-500/15"
+                                ? "bg-amber-50 border-amber-200"
+                                : "bg-red-50 border-red-200"
                     )}>
                         <div className="flex items-center justify-between mb-2">
                             <div className="flex items-center gap-2">
                                 <Shield className={cn(
                                     "w-4 h-4 flex-shrink-0",
-                                    demoStats.complianceScore >= 80 ? "text-emerald-400" :
-                                        demoStats.complianceScore >= 60 ? "text-amber-400" : "text-red-400"
+                                    demoStats.complianceScore >= 80 ? "text-emerald-600" :
+                                        demoStats.complianceScore >= 60 ? "text-amber-600" : "text-red-600"
                                 )} />
                                 <p className="text-xs font-semibold text-foreground">Compliance</p>
                             </div>
                             <p className={cn(
                                 "text-lg font-bold",
-                                demoStats.complianceScore >= 80 ? "text-emerald-400" :
-                                    demoStats.complianceScore >= 60 ? "text-amber-400" : "text-red-400"
+                                demoStats.complianceScore >= 80 ? "text-emerald-600" :
+                                    demoStats.complianceScore >= 60 ? "text-amber-600" : "text-red-600"
                             )}>
                                 {demoStats.complianceScore}%
                             </p>
@@ -144,16 +144,16 @@ export function Sidebar() {
                             <div
                                 className={cn(
                                     "h-full rounded-full transition-all",
-                                    demoStats.complianceScore >= 80 ? "bg-emerald-400" :
-                                        demoStats.complianceScore >= 60 ? "bg-amber-400" : "bg-red-400"
+                                    demoStats.complianceScore >= 80 ? "bg-emerald-500" :
+                                        demoStats.complianceScore >= 60 ? "bg-amber-500" : "bg-red-500"
                                 )}
                                 style={{ width: `${demoStats.complianceScore}%` }}
                             />
                         </div>
                         {criticalCount > 0 && (
                             <div className="flex items-center gap-1.5 mt-2">
-                                <AlertTriangle className="w-3 h-3 text-red-400" />
-                                <p className="text-[11px] text-red-400">{criticalCount} alert critici</p>
+                                <AlertTriangle className="w-3 h-3 text-red-600" />
+                                <p className="text-[11px] text-red-600">{criticalCount} alert critici</p>
                             </div>
                         )}
                     </div>
